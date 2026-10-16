@@ -10,14 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AuthenticatedAppRouteRouteImport } from './routes/_authenticated/_app/route'
+import { Route as AuthenticatedSetupRouteImport } from './routes/_authenticated/setup'
+import { Route as AuthenticatedAppHomeRouteImport } from './routes/_authenticated/_app/home'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -40,6 +48,20 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAppRouteRoute = AuthenticatedAppRouteRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSetupRoute = AuthenticatedSetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAppHomeRoute = AuthenticatedAppHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +69,8 @@ export interface FileRoutesByFullPath {
   '/help': typeof HelpRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/setup': typeof AuthenticatedSetupRoute
+  '/home': typeof AuthenticatedAppHomeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,25 +78,43 @@ export interface FileRoutesByTo {
   '/help': typeof HelpRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/setup': typeof AuthenticatedSetupRoute
+  '/home': typeof AuthenticatedAppHomeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/help': typeof HelpRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/_authenticated/_app': typeof AuthenticatedAppRouteRouteWithChildren
+  '/_authenticated/setup': typeof AuthenticatedSetupRoute
+  '/_authenticated/_app/home': typeof AuthenticatedAppHomeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/help' | '/privacy' | '/terms'
+  fullPaths:
+    '/' | '/auth' | '/help' | '/privacy' | '/terms' | '/setup' | '/home'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/help' | '/privacy' | '/terms'
-  id: '__root__' | '/' | '/auth' | '/help' | '/privacy' | '/terms'
+  to: '/' | '/auth' | '/help' | '/privacy' | '/terms' | '/setup' | '/home'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/help'
+    | '/privacy'
+    | '/terms'
+    | '/_authenticated/_app'
+    | '/_authenticated/setup'
+    | '/_authenticated/_app/home'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   HelpRoute: typeof HelpRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -86,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -116,11 +165,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/_app': {
+      id: '/_authenticated/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedAppRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/setup': {
+      id: '/_authenticated/setup'
+      path: '/setup'
+      fullPath: '/setup'
+      preLoaderRoute: typeof AuthenticatedSetupRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/_app/home': {
+      id: '/_authenticated/_app/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AuthenticatedAppHomeRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
   }
 }
 
+interface AuthenticatedAppRouteRouteChildren {
+  AuthenticatedAppHomeRoute: typeof AuthenticatedAppHomeRoute
+}
+
+const AuthenticatedAppRouteRouteChildren: AuthenticatedAppRouteRouteChildren = {
+  AuthenticatedAppHomeRoute: AuthenticatedAppHomeRoute,
+}
+
+const AuthenticatedAppRouteRouteWithChildren =
+  AuthenticatedAppRouteRoute._addFileChildren(
+    AuthenticatedAppRouteRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAppRouteRoute: typeof AuthenticatedAppRouteRouteWithChildren
+  AuthenticatedSetupRoute: typeof AuthenticatedSetupRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAppRouteRoute: AuthenticatedAppRouteRouteWithChildren,
+  AuthenticatedSetupRoute: AuthenticatedSetupRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   HelpRoute: HelpRoute,
   PrivacyRoute: PrivacyRoute,
