@@ -15,7 +15,6 @@ export function readDemoSubs(): DemoSub[] {
 
 export function completeDemoTask(taskId: string, reward: number) {
   const subs = readDemoSubs();
-  if (subs.some((s) => s.task_id === taskId)) return;
   subs.push({ task_id: taskId, reward, at: new Date().toISOString() });
   try {
     localStorage.setItem(KEY, JSON.stringify(subs));
