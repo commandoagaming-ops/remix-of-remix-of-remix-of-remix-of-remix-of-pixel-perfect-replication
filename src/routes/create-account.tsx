@@ -8,9 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LangSelect, Logo } from "@/components/common";
 import { GoogleIcon, googleSignIn } from "@/components/google";
-import { supabase } from "@/integrations/supabase/client";
 import { errMsg } from "@/lib/data";
 import { readPending, savePending } from "@/lib/pending-signup";
+import { demoSignIn } from "@/lib/demo-auth";
 import { fileToAvatar } from "@/lib/avatar";
 
 export const Route = createFileRoute("/create-account")({
@@ -61,20 +61,19 @@ function CreateAccount() {
     if (!r.success) { toast.error(r.error.issues[0]?.message ?? "Check your details"); return; }
     keep();
     setBusy(true);
-    const { error } = await supabase.auth.signUp({
-      email: r.data.email,
-      password: r.data.password,
-      options: { emailRedirectTo: window.location.origin, data: { full_name: r.data.full_name, phone } },
-    });
+    // Demo mode: details are kept locally and the user goes straight to Home.
+    demoSignIn({ full_name: r.data.full_name, email: r.data.email, phone, avatar_url: avatar });
     setBusy(false);
-    if (error) { toast.error(errMsg(error)); return; }
-    setSentTo(r.data.email);
+    toast.success("Account created (demo)");
+    nav({ to: "/home" });
   }
 
   async function withGoogle() {
     if (!ready) { toast.error("Add your photo and name first"); return; }
     keep();
-    await googleSignIn();
+    demoSignIn({ full_name: f.full_name.trim(), phone, avatar_url: avatar });
+    toast.success("Signed in with Google (demo)");
+    nav({ to: "/home" });
   }
 
   return (
