@@ -159,6 +159,36 @@ function PhoneSignup() {
           </p>
         </div>
       </main>
+      {pickerOpen && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50" onClick={() => setPickerOpen(false)}>
+          <div
+            className="max-h-[70vh] w-full max-w-md overflow-y-auto rounded-t-3xl border bg-card p-4 pb-8 shadow-card"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-lg font-bold">Select country</h2>
+              <button type="button" onClick={() => setPickerOpen(false)} className="text-sm text-muted-foreground">Cancel</button>
+            </div>
+            <ul className="divide-y">
+              {COUNTRIES.map((x, i) => (
+                <li key={x.name}>
+                  <button
+                    type="button"
+                    onClick={() => { setCi(i); setPhone(""); setPickerOpen(false); }}
+                    className={`flex w-full items-center justify-between px-2 py-3 text-left text-sm ${i === ci ? "font-semibold text-primary" : ""}`}
+                  >
+                    <span className="flex items-center gap-3">
+                      <span className="text-xl">{x.flag}</span>
+                      {x.name}
+                    </span>
+                    <span className="text-muted-foreground">{x.dial}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
