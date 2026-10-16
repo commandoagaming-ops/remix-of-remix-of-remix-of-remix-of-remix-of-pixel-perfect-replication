@@ -10,7 +10,7 @@ import { useT } from "@/lib/i18n";
 import { GoogleIcon, googleSignIn } from "@/components/google";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (s: Record<string, unknown>) => ({ mode: s.mode === "signup" ? ("signup" as const) : ("login" as const) }),
+  validateSearch: (s: Record<string, unknown>) => ({ mode: s["mode"] === "signup" ? ("signup" as const) : ("login" as const) }),
   head: () => ({
     meta: [
       { title: "Log in or sign up — Unto Together" },

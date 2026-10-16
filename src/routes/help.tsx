@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { LegalShell } from "@/components/common";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-const FAQ = [
+const FAQ: [string, string][] = [
   ["How do I find tasks?", "Open the Tasks tab. Each card shows the reward, time needed and instructions."],
   ["How are rewards calculated?", "Each task has a fixed reward shown on its card. You receive it once your submission is approved."],
   ["How does verification work?", "Our team reviews every submission. Approved rewards move to your Available Balance; rejected ones show a reason."],

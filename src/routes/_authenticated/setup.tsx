@@ -56,7 +56,7 @@ function Setup() {
     setBusy(true);
     const { error } = await supabase.from("profiles").update({ ...f, full_name: f.full_name.trim(), phone: f.phone.trim(), profile_completed: true }).eq("id", p!.id);
     setBusy(false);
-    if (error) return toast.error(errMsg(error));
+    if (error) { toast.error(errMsg(error)); return; }
     setLang(f.preferred_language as Lang);
     await qc.invalidateQueries({ queryKey: ["profile"] });
     nav({ to: "/home" });
