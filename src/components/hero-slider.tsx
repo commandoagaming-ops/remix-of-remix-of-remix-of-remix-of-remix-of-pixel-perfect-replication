@@ -74,7 +74,7 @@ export function HeroSlider() {
       ))}
       <Doodles key={i} tint={active.doodle} />
 
-      <div className="relative px-3 pt-3 sm:px-4 sm:pt-4">
+      <div className="relative px-3 pt-3 sm:px-4 sm:pt-4 pb-10">
         {SLIDES.map((s, n) => (
           <div
             key={n}
@@ -94,7 +94,7 @@ export function HeroSlider() {
       </div>
 
       {/* Dots on the colored band below the image */}
-      <div className="relative flex justify-center gap-2 py-3">
+      <div className="relative flex justify-center gap-2 pb-4">
         {SLIDES.map((s, n) => (
           <button
             key={n}
