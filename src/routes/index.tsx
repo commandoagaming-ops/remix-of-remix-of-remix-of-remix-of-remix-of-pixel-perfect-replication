@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { ArrowRight, CheckCircle2, Mail, PlayCircle, ShieldCheck, Smartphone, Wallet } from "lucide-react";
 import { toast } from "sonner";
 import hero from "@/assets/hero.jpg";
+import promo1 from "@/assets/promo-1.mp4.asset.json";
+import promo2 from "@/assets/promo-2.mp4.asset.json";
 import { Button } from "@/components/ui/button";
 import { LangSelect, Logo } from "@/components/common";
 import { useT } from "@/lib/i18n";
@@ -92,6 +94,20 @@ function Welcome() {
           ))}
         </div>
         <p className="mt-6 text-xs text-muted-foreground">Rewards depend on approved task completion. Earnings are not guaranteed.</p>
+      </section>
+
+      <section className="bg-promo py-14">
+        <div className="mx-auto max-w-6xl px-5">
+          <h2 className="text-2xl font-bold">See how it works</h2>
+          <p className="mt-1 text-sm text-muted-foreground">Watch real people earning with Earn to Each Other.</p>
+          <div className="mt-6 grid gap-5 md:grid-cols-2">
+            {[promo1, promo2].map((v, i) => (
+              <div key={i} className="overflow-hidden rounded-3xl border-4 border-card bg-card shadow-elegant">
+                <video src={v.url} controls playsInline preload="metadata" className="aspect-video w-full bg-muted object-cover" />
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       <footer className="border-t">
