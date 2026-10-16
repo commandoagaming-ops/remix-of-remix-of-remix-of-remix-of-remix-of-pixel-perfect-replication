@@ -70,16 +70,18 @@ function AppShell() {
         </main>
       </div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
-        {NAV.map((n) => {
-          const active = path.startsWith(n.to);
-          return (
-            <Link key={n.to} to={n.to} className={cn("flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium", active ? "text-primary" : "text-muted-foreground")}>
-              <span className={cn("grid h-8 w-12 place-items-center rounded-full", active && "bg-primary-soft")}><n.icon className="h-5 w-5" /></span>
-              <span className="max-w-full truncate px-1">{n.label}</span>
-            </Link>
-          );
-        })}
+      <nav className="fixed inset-x-3 bottom-3 z-30 mb-[env(safe-area-inset-bottom)] rounded-2xl border bg-card/95 shadow-elegant backdrop-blur md:hidden">
+        <div className="grid grid-cols-3">
+          {NAV.map((n) => {
+            const active = path.startsWith(n.to);
+            return (
+              <Link key={n.to} to={n.to} className={cn("flex flex-col items-center justify-center gap-0.5 py-2 text-xs font-semibold transition-colors", active ? "text-primary" : "text-muted-foreground")}>
+                <span className={cn("grid h-8 w-14 place-items-center rounded-full transition-colors", active && "bg-primary-soft")}><n.icon className="h-5 w-5" /></span>
+                <span>{n.label}</span>
+              </Link>
+            );
+          })}
+        </div>
       </nav>
     </div>
   );

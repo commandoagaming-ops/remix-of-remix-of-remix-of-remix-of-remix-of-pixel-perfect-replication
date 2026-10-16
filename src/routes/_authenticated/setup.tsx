@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Camera, Check, Trash2 } from "lucide-react";
+import { Camera, Check, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -84,9 +84,13 @@ function Setup() {
         <div className="rounded-3xl border bg-card p-6 shadow-card">
           {step === 0 && (
             <div className="flex flex-col items-center gap-4">
-              <div className="grid h-32 w-32 place-items-center overflow-hidden rounded-full bg-primary-soft text-primary">
-                {f.avatar_url ? <img src={f.avatar_url} alt="Preview" className="h-full w-full object-cover" /> : <Camera className="h-10 w-10" />}
-              </div>
+              <button type="button" onClick={() => fileRef.current?.click()} aria-label="Upload profile photo" className="relative">
+                <span className="grid h-32 w-32 place-items-center overflow-hidden rounded-full border-4 border-card bg-primary-soft text-primary shadow-card">
+                  {f.avatar_url ? <img src={f.avatar_url} alt="Preview" className="h-full w-full object-cover" /> : <Camera className="h-10 w-10" />}
+                </span>
+                <span className="absolute bottom-1 right-1 grid h-9 w-9 place-items-center rounded-full border-2 border-card bg-primary text-primary-foreground shadow-card"><Plus className="h-5 w-5" /></span>
+              </button>
+              <p className="text-sm font-medium">Tap the photo to upload</p>
               <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={async (e) => {
                 const file = e.target.files?.[0]; if (!file) return;
                 try { setF({ ...f, avatar_url: await fileToAvatar(file) }); } catch (err) { toast.error(errMsg(err)); }
