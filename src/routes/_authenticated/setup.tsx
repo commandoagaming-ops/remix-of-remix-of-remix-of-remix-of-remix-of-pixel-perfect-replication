@@ -48,7 +48,7 @@ function Setup() {
     setBusy(true);
     if (readDemoUser()) {
       // Demo mode: no backend — save details locally and go Home.
-      demoSignIn({ full_name: f.full_name.trim(), phone: f.phone.trim(), avatar_url: f.avatar_url ?? undefined, email });
+      demoSignIn({ full_name: f.full_name.trim(), phone: f.phone.trim(), ...(f.avatar_url ? { avatar_url: f.avatar_url } : {}), email });
       setBusy(false);
       clearPending();
       setLang(f.preferred_language as Lang);
