@@ -21,10 +21,10 @@ export const Route = createFileRoute("/auth")({
   validateSearch: (s: Record<string, unknown>) => ({ mode: s["mode"] === "signup" ? ("signup" as const) : ("login" as const) }),
   head: () => ({
     meta: [
-      { title: "Log in or sign up — Unto Together" },
-      { name: "description", content: "Access your Unto Together account." },
-      { property: "og:title", content: "Log in — Unto Together" },
-      { property: "og:description", content: "Access your Unto Together account." },
+      { title: "Log in or sign up — Earn to Each Other" },
+      { name: "description", content: "Access your Earn to Each Other account." },
+      { property: "og:title", content: "Log in — Earn to Each Other" },
+      { property: "og:description", content: "Access your Earn to Each Other account." },
     ],
   }),
   component: AuthPage,

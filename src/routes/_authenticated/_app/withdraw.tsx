@@ -10,7 +10,7 @@ import { errMsg, maskAccount, money, useBalances, useSettings } from "@/lib/data
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/_app/withdraw")({
-  head: () => ({ meta: [{ title: "Withdrawal — Unto Together" }, { name: "description", content: "Withdraw your earnings." }, { property: "og:title", content: "Withdrawal — Unto Together" }, { property: "og:description", content: "Withdraw your earnings." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
+  head: () => ({ meta: [{ title: "Withdrawal — Earn to Each Other" }, { name: "description", content: "Withdraw your earnings." }, { property: "og:title", content: "Withdrawal — Earn to Each Other" }, { property: "og:description", content: "Withdraw your earnings." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: WithdrawPage,
 });
 

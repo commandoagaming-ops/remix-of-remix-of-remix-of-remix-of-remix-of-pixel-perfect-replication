@@ -3,7 +3,7 @@ import { Construction } from "lucide-react";
 import { Empty, PageTitle } from "@/components/common";
 
 export const Route = createFileRoute("/_authenticated/_app/learn")({
-  head: () => ({ meta: [{ title: "Earn / Learn — Unto Together" }, { name: "description", content: "Earn / Learn" }, { property: "og:title", content: "Earn / Learn — Unto Together" }, { property: "og:description", content: "Earn / Learn" }] }),
+  head: () => ({ meta: [{ title: "Earn / Learn — Earn to Each Other" }, { name: "description", content: "Earn / Learn" }, { property: "og:title", content: "Earn / Learn — Earn to Each Other" }, { property: "og:description", content: "Earn / Learn" }] }),
   component: () => (
     <div className="p-4">
       <PageTitle title="Earn / Learn" />

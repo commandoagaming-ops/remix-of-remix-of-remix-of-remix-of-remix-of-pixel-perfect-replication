@@ -13,9 +13,9 @@ const FAQ: [string, string][] = [
 
 export const Route = createFileRoute("/help")({
   head: () => ({ meta: [
-    { title: "Help Center — Unto Together" },
+    { title: "Help Center — Earn to Each Other" },
     { name: "description", content: "Answers about tasks, rewards and withdrawals." },
-    { property: "og:title", content: "Help Center — Unto Together" },
+    { property: "og:title", content: "Help Center — Earn to Each Other" },
     { property: "og:description", content: "Answers about tasks, rewards and withdrawals." },
   ] }),
   component: () => (

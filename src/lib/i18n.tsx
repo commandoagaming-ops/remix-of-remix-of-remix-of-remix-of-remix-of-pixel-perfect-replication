@@ -10,7 +10,7 @@ export const LANGS: { code: Lang; label: string }[] = [
 const dict = {
   en: {
     tagline: "Grow Together. Complete Tasks. Earn Rewards.",
-    intro: "Join Unto Together, explore available tasks, learn new skills, and track your rewards from one simple dashboard.",
+    intro: "Join Earn to Each Other, explore available tasks, learn new skills, and track your rewards from one simple dashboard.",
     signupGoogle: "Sign Up with Google", signupEmail: "Sign Up with Email", signupMobile: "Sign Up with Mobile Number",
     haveAccount: "Already have an account?", login: "Log In", logout: "Log Out", terms: "Terms of Service", privacy: "Privacy Policy",
     home: "Home", tasks: "Tasks", learn: "Earn / Learn", profile: "Profile", admin: "Admin",
@@ -33,7 +33,7 @@ const dict = {
   },
   hi: {
     tagline: "साथ बढ़ें। टास्क पूरे करें। रिवॉर्ड कमाएँ।",
-    intro: "Unto Together से जुड़ें, उपलब्ध टास्क देखें, नई स्किल सीखें और एक आसान डैशबोर्ड से अपने रिवॉर्ड ट्रैक करें।",
+    intro: "Earn to Each Other से जुड़ें, उपलब्ध टास्क देखें, नई स्किल सीखें और एक आसान डैशबोर्ड से अपने रिवॉर्ड ट्रैक करें।",
     signupGoogle: "Google से साइन अप करें", signupEmail: "ईमेल से साइन अप करें", signupMobile: "मोबाइल नंबर से साइन अप करें",
     haveAccount: "पहले से अकाउंट है?", login: "लॉग इन", logout: "लॉग आउट", terms: "सेवा की शर्तें", privacy: "गोपनीयता नीति",
     home: "होम", tasks: "टास्क", learn: "कमाएँ / सीखें", profile: "प्रोफ़ाइल", admin: "एडमिन",
@@ -56,7 +56,7 @@ const dict = {
   },
   te: {
     tagline: "కలిసి ఎదగండి. టాస్క్‌లు పూర్తి చేయండి. రివార్డులు పొందండి.",
-    intro: "Unto Together లో చేరండి, అందుబాటులో ఉన్న టాస్క్‌లు చూడండి, కొత్త నైపుణ్యాలు నేర్చుకోండి, మీ రివార్డులను ఒకే డాష్‌బోర్డ్‌లో ట్రాక్ చేయండి.",
+    intro: "Earn to Each Other లో చేరండి, అందుబాటులో ఉన్న టాస్క్‌లు చూడండి, కొత్త నైపుణ్యాలు నేర్చుకోండి, మీ రివార్డులను ఒకే డాష్‌బోర్డ్‌లో ట్రాక్ చేయండి.",
     signupGoogle: "Google తో సైన్ అప్", signupEmail: "ఇమెయిల్‌తో సైన్ అప్", signupMobile: "మొబైల్ నంబర్‌తో సైన్ అప్",
     haveAccount: "ఇప్పటికే ఖాతా ఉందా?", login: "లాగిన్", logout: "లాగ్ అవుట్", terms: "సేవా నిబంధనలు", privacy: "గోప్యతా విధానం",
     home: "హోమ్", tasks: "టాస్క్‌లు", learn: "సంపాదించండి / నేర్చుకోండి", profile: "ప్రొఫైల్", admin: "అడ్మిన్",

@@ -4,7 +4,7 @@ import { TaskList } from "@/components/task-list";
 import { money, useBalances } from "@/lib/data";
 
 export const Route = createFileRoute("/_authenticated/_app/tasks")({
-  head: () => ({ meta: [{ title: "Tasks — Unto Together" }, { name: "description", content: "Watch ads and complete tasks to earn." }, { property: "og:title", content: "Tasks — Unto Together" }, { property: "og:description", content: "Watch ads and complete tasks to earn." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
+  head: () => ({ meta: [{ title: "Tasks — Earn to Each Other" }, { name: "description", content: "Watch ads and complete tasks to earn." }, { property: "og:title", content: "Tasks — Earn to Each Other" }, { property: "og:description", content: "Watch ads and complete tasks to earn." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: TasksPage,
 });
 
