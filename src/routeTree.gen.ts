@@ -19,6 +19,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedAppRouteRouteImport } from './routes/_authenticated/_app/route'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedSetupRouteImport } from './routes/_authenticated/setup'
+import { Route as AuthenticatedAppAccountRouteImport } from './routes/_authenticated/_app/account'
 import { Route as AuthenticatedAppHomeRouteImport } from './routes/_authenticated/_app/home'
 import { Route as AuthenticatedAppLearnRouteImport } from './routes/_authenticated/_app/learn'
 import { Route as AuthenticatedAppNotificationsRouteImport } from './routes/_authenticated/_app/notifications'
@@ -75,6 +76,11 @@ const AuthenticatedSetupRoute = AuthenticatedSetupRouteImport.update({
   path: '/setup',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAppAccountRoute = AuthenticatedAppAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
 const AuthenticatedAppHomeRoute = AuthenticatedAppHomeRouteImport.update({
   id: '/home',
   path: '/home',
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/setup': typeof AuthenticatedSetupRoute
+  '/account': typeof AuthenticatedAppAccountRoute
   '/home': typeof AuthenticatedAppHomeRoute
   '/learn': typeof AuthenticatedAppLearnRoute
   '/notifications': typeof AuthenticatedAppNotificationsRoute
@@ -140,6 +147,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/setup': typeof AuthenticatedSetupRoute
+  '/account': typeof AuthenticatedAppAccountRoute
   '/home': typeof AuthenticatedAppHomeRoute
   '/learn': typeof AuthenticatedAppLearnRoute
   '/notifications': typeof AuthenticatedAppNotificationsRoute
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   '/_authenticated/_app': typeof AuthenticatedAppRouteRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/setup': typeof AuthenticatedSetupRoute
+  '/_authenticated/_app/account': typeof AuthenticatedAppAccountRoute
   '/_authenticated/_app/home': typeof AuthenticatedAppHomeRoute
   '/_authenticated/_app/learn': typeof AuthenticatedAppLearnRoute
   '/_authenticated/_app/notifications': typeof AuthenticatedAppNotificationsRoute
@@ -179,6 +188,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin'
     | '/setup'
+    | '/account'
     | '/home'
     | '/learn'
     | '/notifications'
@@ -196,6 +206,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin'
     | '/setup'
+    | '/account'
     | '/home'
     | '/learn'
     | '/notifications'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_app'
     | '/_authenticated/admin'
     | '/_authenticated/setup'
+    | '/_authenticated/_app/account'
     | '/_authenticated/_app/home'
     | '/_authenticated/_app/learn'
     | '/_authenticated/_app/notifications'
@@ -306,6 +318,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSetupRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/_app/account': {
+      id: '/_authenticated/_app/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AuthenticatedAppAccountRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
     '/_authenticated/_app/home': {
       id: '/_authenticated/_app/home'
       path: '/home'
@@ -359,6 +378,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAppRouteRouteChildren {
+  AuthenticatedAppAccountRoute: typeof AuthenticatedAppAccountRoute
   AuthenticatedAppHomeRoute: typeof AuthenticatedAppHomeRoute
   AuthenticatedAppLearnRoute: typeof AuthenticatedAppLearnRoute
   AuthenticatedAppNotificationsRoute: typeof AuthenticatedAppNotificationsRoute
@@ -369,6 +389,7 @@ interface AuthenticatedAppRouteRouteChildren {
 }
 
 const AuthenticatedAppRouteRouteChildren: AuthenticatedAppRouteRouteChildren = {
+  AuthenticatedAppAccountRoute: AuthenticatedAppAccountRoute,
   AuthenticatedAppHomeRoute: AuthenticatedAppHomeRoute,
   AuthenticatedAppLearnRoute: AuthenticatedAppLearnRoute,
   AuthenticatedAppNotificationsRoute: AuthenticatedAppNotificationsRoute,
