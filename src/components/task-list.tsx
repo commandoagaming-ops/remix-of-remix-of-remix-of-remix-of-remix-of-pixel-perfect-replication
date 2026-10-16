@@ -120,60 +120,96 @@ export function TaskList({ limit }: { limit?: number }) {
   );
 }
 
-// A random theme is picked each time an ad opens.
+// A random theme is picked each time an ad opens (sky blue or cream).
 const AD_THEMES = [
-  { name: "blue", bg: "linear-gradient(160deg, oklch(0.32 0.09 255), oklch(0.5 0.14 245))", card: "linear-gradient(135deg, oklch(0.6 0.15 240), oklch(0.72 0.12 225))", btn: "oklch(0.62 0.17 245)", fg: "oklch(0.98 0 0)" },
-  { name: "green", bg: "linear-gradient(160deg, oklch(0.3 0.07 160), oklch(0.45 0.11 155))", card: "linear-gradient(135deg, oklch(0.55 0.13 160), oklch(0.68 0.13 145))", btn: "oklch(0.6 0.15 150)", fg: "oklch(0.98 0 0)" },
-  { name: "cream", bg: "linear-gradient(160deg, oklch(0.95 0.035 85), oklch(0.88 0.06 75))", card: "linear-gradient(135deg, oklch(0.75 0.13 70), oklch(0.85 0.1 85))", btn: "oklch(0.55 0.12 60)", fg: "oklch(0.25 0.03 60)" },
-  { name: "discord", bg: "linear-gradient(160deg, oklch(0.25 0.02 270), oklch(0.32 0.03 275))", card: "linear-gradient(135deg, oklch(0.55 0.2 275), oklch(0.65 0.17 280))", btn: "oklch(0.58 0.2 275)", fg: "oklch(0.98 0 0)" },
+  { bg: "linear-gradient(170deg, oklch(0.93 0.05 230), oklch(0.85 0.08 230))", card: "linear-gradient(135deg, oklch(0.6 0.13 235), oklch(0.72 0.11 225))", btn: "oklch(0.58 0.15 240)", fg: "oklch(0.28 0.06 245)" },
+  { bg: "linear-gradient(170deg, oklch(0.97 0.03 90), oklch(0.91 0.06 80))", card: "linear-gradient(135deg, oklch(0.72 0.13 70), oklch(0.82 0.1 85))", btn: "oklch(0.55 0.12 60)", fg: "oklch(0.3 0.04 60)" },
 ];
 
-function playClaps() {
+// Party-popper sound: two quick "pop" bursts.
+function playPops() {
   try {
     const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
     const ctx = new Ctx();
-    const len = Math.floor(ctx.sampleRate * 0.06);
-    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
-    const d = buf.getChannelData(0);
-    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
-    // Many overlapping claps = applause, ~3 seconds
-    for (let i = 0; i < 70; i++) {
-      const src = ctx.createBufferSource();
-      src.buffer = buf;
-      const f = ctx.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 1000 + Math.random() * 1500;
-      const g = ctx.createGain(); const t = ctx.currentTime + Math.random() * 2.8;
-      g.gain.value = 0.25 + Math.random() * 0.35;
-      src.connect(f).connect(g).connect(ctx.destination);
-      src.start(t);
-    }
-    setTimeout(() => ctx.close(), 4000);
+    const pop = (t: number) => {
+      const len = Math.floor(ctx.sampleRate * 0.12);
+      const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 4);
+      const n = ctx.createBufferSource(); n.buffer = buf;
+      const ng = ctx.createGain(); ng.gain.value = 0.9;
+      n.connect(ng).connect(ctx.destination); n.start(t);
+      const o = ctx.createOscillator(); const og = ctx.createGain();
+      o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(50, t + 0.15);
+      og.gain.setValueAtTime(0.8, t); og.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+      o.connect(og).connect(ctx.destination); o.start(t); o.stop(t + 0.2);
+    };
+    pop(ctx.currentTime); pop(ctx.currentTime + 0.28);
+    setTimeout(() => ctx.close(), 1500);
   } catch { /* sound not supported */ }
 }
 
-function Celebration({ amount, fg }: { amount: number; fg: string }) {
-  const bits = Array.from({ length: 40 }, (_, i) => i);
-  const colors = ["#FFD54A", "#FF6B6B", "#4ADE80", "#60A5FA", "#F472B6", "#FFFFFF"];
+// Confetti bursts from both sides of the Claim button, then falls down.
+function Celebration() {
+  const colors = ["#FFD54A", "#FF6B6B", "#4ADE80", "#60A5FA", "#F472B6", "#A78BFA"];
+  const bits = Array.from({ length: 56 }, (_, i) => {
+    const left = i % 2 === 0;
+    const dx = (left ? 1 : -1) * (40 + ((i * 53) % 220));
+    const up = 380 + ((i * 97) % 320);
+    return { left, dx, up, c: colors[i % colors.length], d: (i % 7) * 0.03, shape: i % 3 };
+  });
   return (
-    <div className="pointer-events-none fixed inset-0 z-[60] grid place-items-center overflow-hidden bg-black/40">
+    <div className="pointer-events-none fixed inset-0 z-[60] overflow-hidden">
       <style>{`
-        @keyframes cel-fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1 } 100% { transform: translateY(110vh) rotate(720deg); opacity: .8 } }
-        @keyframes cel-pop { 0% { transform: scale(.3); opacity: 0 } 60% { transform: scale(1.12); opacity: 1 } 100% { transform: scale(1) } }
-        @keyframes cel-twinkle { 0%,100% { transform: scale(.6); opacity: .4 } 50% { transform: scale(1.3); opacity: 1 } }
+        @keyframes pop-burst {
+          0% { transform: translate(0,0) rotate(0); opacity: 1 }
+          35% { transform: translate(var(--dx), calc(var(--up) * -1)) rotate(360deg); opacity: 1 }
+          100% { transform: translate(calc(var(--dx) * 1.4), 40px) rotate(900deg); opacity: 0 }
+        }
+        @keyframes popper { 0%,100% { transform: scale(1) } 20% { transform: scale(1.35) rotate(-10deg) } }
       `}</style>
-      {bits.map((i) => (
-        <span key={i} className="absolute top-0 text-xl" style={{ left: `${(i * 37) % 100}%`, color: colors[i % colors.length], animation: `cel-fall ${2 + (i % 5) * 0.4}s ${(i % 8) * 0.12}s linear forwards` }}>
-          {i % 3 === 0 ? "★" : i % 3 === 1 ? "✦" : "●"}
-        </span>
+      {[true, false].map((l) => (
+        <span key={String(l)} className="absolute bottom-6 text-4xl" style={{ [l ? "left" : "right"]: 8, animation: "popper .5s ease-out 2", transform: l ? undefined : "scaleX(-1)" }}>🎉</span>
       ))}
-      <div className="text-center" style={{ animation: "cel-pop .6s ease-out both", color: fg }}>
-        <div className="text-6xl">🎉</div>
-        <p className="mt-2 font-display text-4xl font-extrabold text-white drop-shadow">Congrats!</p>
-        <p className="mt-1 text-xl font-bold text-white drop-shadow">+{money(amount)} earned</p>
-        <div className="mt-3 flex justify-center gap-2 text-2xl text-yellow-300">
-          {[0, 1, 2, 3, 4].map((k) => <span key={k} style={{ animation: `cel-twinkle 1s ${k * 0.15}s ease-in-out infinite` }}>★</span>)}
-        </div>
-      </div>
+      {bits.map((b, i) => (
+        <span key={i} className="absolute bottom-10" style={{
+          [b.left ? "left" : "right"]: 28, ["--dx" as string]: `${b.dx}px`, ["--up" as string]: `${b.up}px`,
+          width: b.shape === 0 ? 8 : 10, height: b.shape === 0 ? 14 : 10, background: b.c,
+          borderRadius: b.shape === 1 ? 999 : 2, animation: `pop-burst 2.6s ${b.d + (i % 4 === 0 ? 0.28 : 0)}s cubic-bezier(.2,.7,.4,1) forwards`,
+        } as React.CSSProperties} />
+      ))}
     </div>
+  );
+}
+
+// Pencil-style doodles (dog, flowers, trees, sun, clouds) for the ad background.
+function Doodles({ color }: { color: string }) {
+  return (
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.22">
+      {/* sun */}
+      <circle cx="340" cy="70" r="22" /><path d="M340 34v-12M340 118v-12M304 70h-12M388 70h-12M315 45l-8-8M373 103l-8-8M365 45l8-8M307 103l8-8" />
+      {/* clouds */}
+      <path d="M40 120c0-14 12-24 26-22 6-12 26-14 34 0 14-2 22 10 18 22z" />
+      <path d="M210 200c0-10 9-17 19-15 5-9 19-10 25 0 10-1 16 7 13 15z" />
+      {/* tree */}
+      <path d="M60 470v-70M60 430l-14-12M60 420l14-14" /><path d="M60 400c-30 0-38-30-20-44-6-22 22-34 34-18 18-8 34 12 24 28 14 16 0 36-18 34-6 4-14 4-20 0z" />
+      {/* tree 2 */}
+      <path d="M350 560v-60" /><path d="M350 440l-30 50h60zM350 470l-34 50h68z" />
+      {/* flowers */}
+      <g><path d="M120 720v-50" /><circle cx="120" cy="660" r="6" /><path d="M120 654c-6-14 6-20 0-20s6 6 0 20M126 660c14-6 20 6 20 0s-6 6-20 0M120 666c6 14-6 20 0 20s-6-6 0-20M114 660c-14 6-20-6-20 0s6-6 20 0" /><path d="M120 700c10-10 22-8 22-8-2 10-14 12-22 8z" /></g>
+      <g><path d="M300 740v-40" /><circle cx="300" cy="692" r="5" /><path d="M300 687c-5-11 5-16 0-16s5 5 0 16M305 692c11-5 16 5 16 0s-5 5-16 0M300 697c5 11-5 16 0 16s-5-5 0-16M295 692c-11 5-16-5-16 0s5-5 16 0" /></g>
+      <g><path d="M40 300v-30" /><circle cx="40" cy="264" r="4" /><path d="M36 262c-8-8 0-14 4-8 4-6 12 0 4 8M44 268c8 8 0 14-4 8-4 6-12 0-4-8" /></g>
+      {/* dog */}
+      <g transform="translate(210 600)">
+        <path d="M0 40c0-20 14-30 40-30h40c10 0 16 8 16 16v14" />
+        <path d="M8 40v30M30 40v30M74 40v30M92 40v30" />
+        <path d="M96 26c4-18 18-26 32-20 10 4 12 18 4 26-6 6-20 6-28 2" />
+        <path d="M114 6c-4-10 2-16 8-14 4 2 2 10-2 14" /><circle cx="122" cy="16" r="1.5" /><path d="M136 22l4 2" />
+        <path d="M0 30c-10-6-16-14-14-22" />
+      </g>
+      {/* little bird */}
+      <path d="M150 90c6-6 12-6 16 0 4-6 10-6 16 0" /><path d="M250 130c5-5 10-5 13 0 3-5 8-5 13 0" />
+    </svg>
   );
 }
 
@@ -199,26 +235,27 @@ function AdPlayer({ task, onClose }: { task: Task; onClose: () => void }) {
       toast.success(`${money(task.reward_amount)} added to pending — credited after review`);
     }
     setCelebrate(true);
-    playClaps();
+    playPops();
     setTimeout(() => {
       setBusy(false);
       qc.invalidateQueries({ queryKey: ["my-subs"] });
       qc.invalidateQueries({ queryKey: ["balances"] });
       onClose();
-    }, 3500);
+    }, 2800);
   }
 
   const pct = ((AD_SECONDS - left) / AD_SECONDS) * 100;
   return (
-    <div className="fixed inset-0 z-50 flex flex-col" style={{ background: theme.bg, color: theme.fg }}>
-      {celebrate && <Celebration amount={task.reward_amount} fg={theme.fg} />}
+    <div className="fixed inset-0 z-50 flex flex-col overflow-hidden" style={{ background: theme.bg, color: theme.fg }}>
+      <Doodles color={theme.fg} />
+      {celebrate && <Celebration />}
       <div className="flex items-center justify-between gap-3 p-4">
         <div>
           <p className="text-xs opacity-70">You will earn</p>
           <p className="font-display text-2xl font-bold">{money(task.reward_amount)}</p>
         </div>
-        <div className="rounded-full bg-white/20 px-3 py-1 text-sm font-semibold">{left > 0 ? `Ad · ${left}s` : "Done"}</div>
-        <button onClick={onClose} aria-label="Close" className="grid h-10 w-10 place-items-center rounded-full bg-white/20"><X className="h-5 w-5" /></button>
+        <div className="rounded-full bg-white/50 px-3 py-1 text-sm font-semibold">{left > 0 ? `Ad · ${left}s` : "Done"}</div>
+        <button onClick={onClose} aria-label="Close" className="grid h-10 w-10 place-items-center rounded-full bg-white/50"><X className="h-5 w-5" /></button>
       </div>
       <div className="h-1 bg-white/25"><div className="h-full transition-all duration-1000" style={{ width: `${pct}%`, background: theme.btn }} /></div>
       <div className="grid flex-1 place-items-center p-6">
