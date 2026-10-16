@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LangSelect, Logo } from "@/components/common";
-import { COUNTRIES, flagOf } from "@/lib/countries";
+import { COUNTRIES } from "@/lib/countries";
+import { Flag } from "@/components/flag";
 
 export const Route = createFileRoute("/phone-signup")({
   head: () => ({
@@ -92,7 +93,7 @@ function PhoneSignup() {
                       onClick={() => setPickerOpen(true)}
                       className="flex h-10 items-center gap-1 rounded-md border bg-muted px-3 text-sm font-medium"
                     >
-                      {flagOf(c.code)} {c.dial}
+                      <Flag code={c.code} className="text-lg" /> {c.dial}
                       <svg className="h-3.5 w-3.5 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
                     </button>
                     <Input
@@ -151,20 +152,23 @@ function PhoneSignup() {
               <h2 className="text-lg font-bold">Select country</h2>
               <button type="button" onClick={() => setPickerOpen(false)} className="text-sm text-muted-foreground">Cancel</button>
             </div>
-            <div className="grid grid-cols-5 gap-2">
+            <ul className="divide-y">
               {COUNTRIES.map((x, i) => (
-                <button
-                  key={x.code}
-                  type="button"
-                  title={x.name}
-                  aria-label={x.name}
-                  onClick={() => { setCi(i); setPhone(""); setPickerOpen(false); }}
-                  className={`flex h-14 items-center justify-center rounded-xl border text-3xl ${i === ci ? "border-primary bg-primary-soft" : "hover:bg-muted"}`}
-                >
-                  {flagOf(x.code)}
-                </button>
+                <li key={x.code}>
+                  <button
+                    type="button"
+                    onClick={() => { setCi(i); setPhone(""); setPickerOpen(false); }}
+                    className={`flex w-full items-center gap-3 px-2 py-3 text-left rounded-xl ${i === ci ? "bg-primary-soft" : "hover:bg-muted"}`}
+                  >
+                    <Flag code={x.code} className="text-2xl" />
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-semibold">{x.name}</span>
+                      <span className="block text-sm text-muted-foreground">{x.dial}</span>
+                    </span>
+                  </button>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
       )}
