@@ -16,11 +16,10 @@ export const Route = createFileRoute("/_authenticated/_app")({
   component: AppShell,
 });
 
-const NAV: { to: "/home" | "/tasks" | "/learn" | "/profile"; k: TKey; icon: typeof Home }[] = [
-  { to: "/home", k: "home", icon: Home },
-  { to: "/tasks", k: "tasks", icon: ListChecks },
-  { to: "/learn", k: "learn", icon: GraduationCap },
-  { to: "/profile", k: "profile", icon: User },
+const NAV: { to: "/home" | "/tasks" | "/account"; label: string; icon: typeof Home }[] = [
+  { to: "/home", label: "Home", icon: Home },
+  { to: "/tasks", label: "Tasks", icon: ListChecks },
+  { to: "/account", label: "Account", icon: User },
 ];
 
 function AppShell() {
