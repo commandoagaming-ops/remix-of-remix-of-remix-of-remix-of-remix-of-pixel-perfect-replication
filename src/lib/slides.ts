@@ -20,7 +20,7 @@ export const SLIDES: Slide[] = [
     image: slide1.url,
     alt: "Earn to Each Other — watch ads, complete tasks, withdraw via UPI",
     bg: ["#f7ead0", "#efdcae"],
-    doodle: "#c9a24b",
+    doodle: "#a8791a",
     accent: "#b98a1e",
   },
   {
@@ -34,7 +34,7 @@ export const SLIDES: Slide[] = [
     image: slide3.url,
     alt: "Earn to Each Other — grow your earnings",
     bg: ["#bcd9f7", "#8fbef0"],
-    doodle: "#3b82c4",
+    doodle: "#1d4ed8",
     accent: "#2563eb",
   },
 ];

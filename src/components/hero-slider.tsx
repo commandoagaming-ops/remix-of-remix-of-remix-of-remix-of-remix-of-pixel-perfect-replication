@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils";
 // Decorative doodles (flowers, leaves, coins, stars) drawn on the colored band
 // behind the slide image, tinted to match each slide's theme.
 function Doodles({ tint }: { tint: string }) {
-  const s = { stroke: tint, fill: "none", strokeWidth: 2, strokeLinecap: "round" as const };
+  const s = { stroke: tint, fill: "none", strokeWidth: 2.5, strokeLinecap: "round" as const };
   return (
-    <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-40" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" aria-hidden>
+    <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-70" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" aria-hidden>
       {/* flower */}
       <g {...s} transform="translate(28 78)">
         <circle r="4" />
