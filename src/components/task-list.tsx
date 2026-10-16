@@ -220,7 +220,7 @@ function AdPlayer({ task, onClose }: { task: Task; onClose: () => void }) {
         <div className="rounded-full bg-white/20 px-3 py-1 text-sm font-semibold">{left > 0 ? `Ad · ${left}s` : "Done"}</div>
         <button onClick={onClose} aria-label="Close" className="grid h-10 w-10 place-items-center rounded-full bg-white/20"><X className="h-5 w-5" /></button>
       </div>
-      <div className="h-1 bg-white/25"><div className="h-full transition-all duration-1000" style={{ width: `${pct}%`, background: theme.btn }} /></div>{false && <div style={{ width: `${pct}%` }} /></div>
+      <div className="h-1 bg-white/25"><div className="h-full transition-all duration-1000" style={{ width: `${pct}%`, background: theme.btn }} /></div>
       <div className="grid flex-1 place-items-center p-6">
         {/* Simulated ad — replace with a real ad network later */}
         <div className="w-full max-w-md overflow-hidden rounded-3xl p-8 text-center text-white shadow-2xl" style={{ background: theme.card }}>
