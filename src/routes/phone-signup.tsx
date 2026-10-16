@@ -9,6 +9,7 @@ import { LangSelect, Logo } from "@/components/common";
 import { COUNTRIES } from "@/lib/countries";
 import { Flag } from "@/components/flag";
 import { savePending } from "@/lib/pending-signup";
+import { demoSignIn } from "@/lib/demo-auth";
 
 export const Route = createFileRoute("/phone-signup")({
   head: () => ({
@@ -74,7 +75,9 @@ function PhoneSignup() {
     }
     toast.success("Mobile number verified");
     savePending({ phone: `${c.dial} ${phone}` });
-    nav({ to: "/create-account" });
+    // Demo mode: OTP verified — go straight to Home, no real account created.
+    demoSignIn({ phone: `${c.dial} ${phone}` });
+    nav({ to: "/home" });
   }
 
   return (

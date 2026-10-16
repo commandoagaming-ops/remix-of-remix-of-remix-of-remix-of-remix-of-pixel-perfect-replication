@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LangSelect, Logo } from "@/components/common";
-import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/lib/i18n";
-import { GoogleIcon, googleSignIn } from "@/components/google";
+import { GoogleIcon } from "@/components/google";
+import { demoSignIn, isDemoSignedIn } from "@/lib/demo-auth";
 
 function PhoneIcon() {
   return (
@@ -40,28 +40,22 @@ function AuthPage() {
   const [sent, setSent] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => data.session && nav({ to: "/home" }));
-    const { data } = supabase.auth.onAuthStateChange((_e, s) => s && nav({ to: "/home" }));
-    return () => data.subscription.unsubscribe();
+    if (isDemoSignedIn()) nav({ to: "/home" });
   }, [nav]);
 
+  // Demo mode: no real account is created — any details go straight to Home.
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
-    try {
-      if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin } });
-        if (error) throw error;
-        setSent(true);
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-      }
-    } catch (err) {
-      toast.error((err as Error).message);
-    } finally {
-      setBusy(false);
-    }
+    demoSignIn({ email });
+    toast.success(mode === "signup" ? "Account created (demo)" : "Logged in (demo)");
+    nav({ to: "/home" });
+  }
+
+  function withGoogle() {
+    demoSignIn({});
+    toast.success("Signed in with Google (demo)");
+    nav({ to: "/home" });
   }
 
   return (
@@ -74,7 +68,7 @@ function AuthPage() {
             <p className="mt-4 rounded-xl bg-primary-soft p-4 text-sm text-primary">Check your email and click the confirmation link to activate your account.</p>
           ) : (
             <>
-              <Button variant="outline" size="lg" className="mt-5 w-full" onClick={googleSignIn}><GoogleIcon /> Continue with Google</Button>
+              <Button variant="outline" size="lg" className="mt-5 w-full" onClick={withGoogle}><GoogleIcon /> Continue with Google</Button>
               <Button variant="outline" size="lg" className="mt-3 w-full" onClick={() => nav({ to: "/phone-signup" })}>
                 <PhoneIcon /> {mode === "signup" ? "Continue with mobile" : "Continue with number"}
               </Button>
