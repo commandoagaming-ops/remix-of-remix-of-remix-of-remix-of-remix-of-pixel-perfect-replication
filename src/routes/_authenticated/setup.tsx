@@ -14,6 +14,7 @@ import { LANGS, useT, type Lang } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { fileToAvatar } from "@/lib/avatar";
 import { clearPending, readPending } from "@/lib/pending-signup";
+import { demoSignIn, readDemoUser } from "@/lib/demo-auth";
 
 export const Route = createFileRoute("/_authenticated/setup")({
   head: () => ({ meta: [{ title: "Complete your profile — Unto Together" }, { name: "description", content: "Set up your Unto Together profile." }, { property: "og:title", content: "Profile setup — Unto Together" }, { property: "og:description", content: "Set up your profile." }] }),
