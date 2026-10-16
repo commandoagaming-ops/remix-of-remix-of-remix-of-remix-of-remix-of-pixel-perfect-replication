@@ -10,11 +10,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { LangSelect, Logo } from "@/components/common";
 import { supabase } from "@/integrations/supabase/client";
 import { useProfile, errMsg } from "@/lib/data";
-import { LANGS, useT, type Lang } from "@/lib/i18n";
+import { useT, type Lang } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { fileToAvatar } from "@/lib/avatar";
 import { clearPending, readPending } from "@/lib/pending-signup";
 import { demoSignIn, readDemoUser } from "@/lib/demo-auth";
+import { COUNTRIES } from "@/lib/countries";
+import { Flag } from "@/components/flag";
 
 export const Route = createFileRoute("/_authenticated/setup")({
   head: () => ({ meta: [{ title: "Complete your profile — Unto Together" }, { name: "description", content: "Set up your Unto Together profile." }, { property: "og:title", content: "Profile setup — Unto Together" }, { property: "og:description", content: "Set up your profile." }] }),
@@ -42,7 +44,8 @@ function Setup() {
   }, [p]);
 
   const valid0 = !!f.avatar_url;
-  const valid1 = f.full_name.trim().length >= 2 && /^\+?[0-9 ]{8,16}$/.test(f.phone.trim()) && f.country.trim();
+  const [verified, setVerified] = useState(false);
+  const valid1 = f.full_name.trim().length >= 2 && verified;
 
   async function finish() {
     setBusy(true);
@@ -99,18 +102,12 @@ function Setup() {
             <div className="space-y-4">
               <Field label={t("fullName")}><Input value={f.full_name} onChange={(e) => setF({ ...f, full_name: e.target.value })} maxLength={80} /></Field>
               <Field label={t("email")}><Input value={email} disabled /></Field>
-              <Field label={t("mobile")}><Input value={f.phone} placeholder="+91 98765 43210" onChange={(e) => setF({ ...f, phone: e.target.value })} /></Field>
-              <Field label={t("country")}><Input value={f.country} onChange={(e) => setF({ ...f, country: e.target.value })} maxLength={56} /></Field>
-              <Field label={t("language")}>
-                <select className="h-10 w-full rounded-xl border border-input bg-card px-3 text-sm" value={f.preferred_language} onChange={(e) => setF({ ...f, preferred_language: e.target.value })}>
-                  {LANGS.map((l) => <option key={l.code} value={l.code}>{l.label}</option>)}
-                </select>
-              </Field>
+              <PhoneVerify onVerified={(phone, country) => { setF((x) => ({ ...x, phone, country })); setVerified(true); }} onChange={() => setVerified(false)} verified={verified} />
             </div>
           )}
           {step === 2 && (
             <div className="space-y-3 text-sm">
-              {[[t("fullName"), f.full_name], [t("email"), email], [t("mobile"), f.phone], [t("country"), f.country], [t("language"), LANGS.find((l) => l.code === f.preferred_language)?.label]].map(([k, v]) => (
+              {[[t("fullName"), f.full_name], [t("email"), email], [t("mobile"), f.phone]].map(([k, v]) => (
                 <div key={k} className="flex justify-between border-b pb-2"><span className="text-muted-foreground">{k}</span><span className="font-medium">{v}</span></div>
               ))}
               <label className="flex items-start gap-3 pt-2">
@@ -135,4 +132,89 @@ function Setup() {
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return <div className="space-y-1.5"><Label>{label}</Label>{children}</div>;
+}
+
+
+function PhoneVerify({ verified, onVerified, onChange }: { verified: boolean; onVerified: (phone: string, country: string) => void; onChange: () => void }) {
+  const [ci, setCi] = useState(() => Math.max(0, COUNTRIES.findIndex((x) => x.code === "IN")));
+  const [phone, setPhone] = useState("");
+  const [open, setOpen] = useState(false);
+  const [code, setCode] = useState("");
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const refs = useRef<(HTMLInputElement | null)[]>([]);
+  const c = COUNTRIES[ci] ?? COUNTRIES[0]!;
+
+  function send() {
+    const n = String(Math.floor(1000 + Math.random() * 9000));
+    setCode(n); setOtp(["", "", "", ""]);
+    toast.success(`OTP sent to ${c.dial} ${phone}`, { description: `Demo OTP: ${n}`, duration: 10000 });
+    setTimeout(() => refs.current[0]?.focus(), 50);
+  }
+  function setDigit(i: number, v: string) {
+    const d = v.replace(/\D/g, "").slice(-1);
+    const n = [...otp]; n[i] = d; setOtp(n);
+    if (d && i < 3) refs.current[i + 1]?.focus();
+  }
+  function verify() {
+    // Demo: any 4 digits accepted until a real SMS service is connected.
+    if (otp.join("").length !== 4) return;
+    toast.success("Mobile number verified");
+    onVerified(`${c.dial} ${phone}`, c.name);
+  }
+
+  return (
+    <div className="space-y-2">
+      <Label>Mobile number</Label>
+      <div className="flex gap-2">
+        <button type="button" disabled={verified} onClick={() => setOpen(true)} className="flex h-10 shrink-0 items-center gap-1 rounded-md border bg-muted px-3 text-sm font-medium">
+          <Flag code={c.code} className="text-lg" /> {c.dial}
+          <svg className="h-3.5 w-3.5 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
+        </button>
+        <Input inputMode="numeric" placeholder="Enter mobile number" value={phone} disabled={verified}
+          onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, c.digits)); setCode(""); onChange(); }} />
+      </div>
+      {verified ? (
+        <p className="flex items-center gap-1 text-sm font-semibold text-primary"><Check className="h-4 w-4" /> Verified</p>
+      ) : !code ? (
+        <Button type="button" variant="hero" className="w-full" disabled={phone.length !== c.digits} onClick={send}>Send OTP</Button>
+      ) : (
+        <div className="space-y-3 pt-1">
+          <p className="text-xs text-muted-foreground">Enter the 4-digit OTP sent to {c.dial} {phone}</p>
+          <div className="flex justify-center gap-3">
+            {otp.map((d, i) => (
+              <Input key={i} ref={(el) => { refs.current[i] = el; }} value={d} inputMode="numeric" maxLength={1} aria-label={`OTP digit ${i + 1}`}
+                className="h-12 w-12 text-center text-xl font-bold" onChange={(e) => setDigit(i, e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Backspace" && !otp[i] && i > 0) refs.current[i - 1]?.focus(); }} />
+            ))}
+          </div>
+          <Button type="button" variant="hero" className="w-full" disabled={otp.join("").length !== 4} onClick={verify}>Verify OTP</Button>
+          <button type="button" onClick={send} className="w-full text-center text-sm font-semibold text-primary">Resend OTP</button>
+        </div>
+      )}
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50" onClick={() => setOpen(false)}>
+          <div className="max-h-[70vh] w-full max-w-md overflow-y-auto rounded-t-3xl border bg-card p-4 pb-8 shadow-card" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-lg font-bold">Select country</h2>
+              <button type="button" onClick={() => setOpen(false)} className="text-sm text-muted-foreground">Cancel</button>
+            </div>
+            <ul className="divide-y">
+              {COUNTRIES.map((x, i) => (
+                <li key={x.code}>
+                  <button type="button" onClick={() => { setCi(i); setPhone(""); setCode(""); setOpen(false); }}
+                    className={`flex w-full items-center gap-3 rounded-xl px-2 py-3 text-left ${i === ci ? "bg-primary-soft" : "hover:bg-muted"}`}>
+                    <Flag code={x.code} className="text-2xl" />
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-semibold">{x.name}</span>
+                      <span className="block text-sm text-muted-foreground">{x.dial}</span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
