@@ -24,7 +24,7 @@ const BANNERS = [
 ];
 
 function Banner({ index, title, reward }: { index: number; title: string; reward: number }) {
-  const b = BANNERS[index % BANNERS.length];
+  const b = BANNERS[index % BANNERS.length] ?? BANNERS[0]!;
   return (
     <div className="relative h-24 overflow-hidden" style={{ background: b.bg }}>
       {/* decorative shapes */}
@@ -44,7 +44,7 @@ export function TaskList({ limit }: { limit?: number }) {
   const { data: tasks, isLoading } = useTasks();
   const { data: subs } = useMySubmissions();
   const [open, setOpen] = useState<Task | null>(null);
-  const done = new Map(subs?.map((s) => [s.task_id, s.reward_amount ?? 0]));
+  const done = new Map(subs?.map((s) => [s.task_id, "reward_amount" in s ? s.reward_amount : (s.tasks?.reward_amount ?? 0)]));
   const list = limit ? tasks?.slice(0, limit) : tasks;
 
   if (isLoading) return <div className="space-y-3">{[0, 1, 2].map((k) => <Skeleton key={k} className="h-40 rounded-2xl" />)}</div>;
