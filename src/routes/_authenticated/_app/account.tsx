@@ -5,6 +5,7 @@ import { Card, StatusBadge } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { money, useBalances, useProfile, useUser } from "@/lib/data";
+import { demoSignOut, readDemoUser } from "@/lib/demo-auth";
 
 export const Route = createFileRoute("/_authenticated/_app/account")({
   head: () => ({ meta: [{ title: "Account — Unto Together" }, { name: "description", content: "Your account, withdrawals and verification." }, { property: "og:title", content: "Account — Unto Together" }, { property: "og:description", content: "Your account, withdrawals and verification." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
@@ -18,7 +19,7 @@ function AccountPage() {
   const { data: b } = useBalances();
   const { data: methods } = useQuery({
     queryKey: ["payout-methods"],
-    queryFn: async () => (await supabase.from("payout_methods").select("*").order("created_at", { ascending: false })).data ?? [],
+    queryFn: async () => (readDemoUser() ? [] : (await supabase.from("payout_methods").select("*").order("created_at", { ascending: false })).data ?? []),
   });
   const payoutStatus = methods?.[0]?.verification_status;
   const checks: [string, boolean, string?][] = [
@@ -70,7 +71,7 @@ function AccountPage() {
         </div>
       </Card>
 
-      <Button variant="outline" className="w-full" onClick={async () => { await supabase.auth.signOut(); nav({ to: "/auth", search: {} as never }); }}><LogOut /> Log out</Button>
+      <Button variant="outline" className="w-full" onClick={async () => { demoSignOut(); await supabase.auth.signOut(); nav({ to: "/auth", search: {} as never }); }}><LogOut /> Log out</Button>
     </div>
   );
 }
