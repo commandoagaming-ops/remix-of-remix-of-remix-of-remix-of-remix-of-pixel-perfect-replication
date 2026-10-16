@@ -14,6 +14,7 @@ import { LANGS, useT, type Lang } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { fileToAvatar } from "@/lib/avatar";
 import { clearPending, readPending } from "@/lib/pending-signup";
+import { demoSignIn, readDemoUser } from "@/lib/demo-auth";
 
 export const Route = createFileRoute("/_authenticated/setup")({
   head: () => ({ meta: [{ title: "Complete your profile — Unto Together" }, { name: "description", content: "Set up your Unto Together profile." }, { property: "og:title", content: "Profile setup — Unto Together" }, { property: "og:description", content: "Set up your profile." }] }),
@@ -45,6 +46,15 @@ function Setup() {
 
   async function finish() {
     setBusy(true);
+    if (readDemoUser()) {
+      // Demo mode: no backend — save details locally and go Home.
+      demoSignIn({ full_name: f.full_name.trim(), phone: f.phone.trim(), avatar_url: f.avatar_url ?? undefined, email });
+      setBusy(false);
+      clearPending();
+      setLang(f.preferred_language as Lang);
+      nav({ to: "/home" });
+      return;
+    }
     const { error } = await supabase.from("profiles").update({ ...f, full_name: f.full_name.trim(), phone: f.phone.trim(), profile_completed: true }).eq("id", p!.id);
     setBusy(false);
     if (error) { toast.error(errMsg(error)); return; }

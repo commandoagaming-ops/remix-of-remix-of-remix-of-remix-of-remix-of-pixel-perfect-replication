@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { readDemoUser } from "@/lib/demo-auth";
+import { readDemoSubs } from "@/lib/demo-tasks";
 
 export function money(n: number | null | undefined, currency = "INR") {
   return new Intl.NumberFormat("en-IN", { style: "currency", currency, maximumFractionDigits: 2 }).format(Number(n ?? 0));
@@ -68,7 +69,10 @@ export function useBalances() {
   return useQuery({
     queryKey: ["balances"],
     queryFn: async () => {
-      if (readDemoUser()) return { available: 1250, pending: 180, total_earned: 1430, withdrawn: 0 };
+      if (readDemoUser()) {
+        const earned = readDemoSubs().reduce((s, x) => s + x.reward, 0);
+        return { available: earned, pending: 0, total_earned: earned, withdrawn: 0 };
+      }
       const { data, error } = await supabase.rpc("get_my_balances");
       if (error) throw error;
       return data?.[0] ?? { available: 0, pending: 0, total_earned: 0, withdrawn: 0 };
@@ -91,7 +95,9 @@ export function useMySubmissions() {
   return useQuery({
     queryKey: ["my-subs"],
     queryFn: async () => {
-      if (readDemoUser()) return [];
+      if (readDemoUser()) {
+        return readDemoSubs().map((s) => ({ task_id: s.task_id, status: "approved", reward_amount: s.reward, submitted_at: s.at }));
+      }
       const { data: u } = await supabase.auth.getUser();
       const { data, error } = await supabase.from("task_submissions").select("*, tasks(title, reward_amount)").eq("user_id", u.user!.id).order("submitted_at", { ascending: false });
       if (error) throw error;

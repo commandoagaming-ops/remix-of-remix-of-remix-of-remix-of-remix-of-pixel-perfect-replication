@@ -1,45 +1,81 @@
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, Clock, PlayCircle, X } from "lucide-react";
+import { BadgeCheck, Clock, Eye, PlayCircle, X } from "lucide-react";
 import { toast } from "sonner";
-import { Empty, StatusBadge } from "@/components/common";
+import { Empty } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { errMsg, money, useMySubmissions, useTasks } from "@/lib/data";
+import { readDemoUser } from "@/lib/demo-auth";
+import { completeDemoTask } from "@/lib/demo-tasks";
+import { cn } from "@/lib/utils";
 
 const AD_SECONDS = 15;
 type Task = NonNullable<ReturnType<typeof useTasks>["data"]>[number];
+
+// Banner styles rotate per task — each card gets its own color banner.
+const BANNERS = [
+  { bg: "linear-gradient(135deg, oklch(0.45 0.11 163), oklch(0.62 0.12 150))", deco: "oklch(0.98 0.01 150 / 18%)" },
+  { bg: "linear-gradient(135deg, oklch(0.55 0.14 240), oklch(0.7 0.12 230))", deco: "oklch(0.98 0.01 240 / 20%)" },
+  { bg: "linear-gradient(135deg, oklch(0.62 0.15 70), oklch(0.78 0.13 80))", deco: "oklch(0.98 0.02 80 / 25%)" },
+  { bg: "linear-gradient(135deg, oklch(0.5 0.13 300), oklch(0.65 0.12 290))", deco: "oklch(0.98 0.01 300 / 20%)" },
+  { bg: "linear-gradient(135deg, oklch(0.55 0.16 30), oklch(0.7 0.14 40))", deco: "oklch(0.98 0.01 40 / 22%)" },
+];
+
+function Banner({ index, title, reward }: { index: number; title: string; reward: number }) {
+  const b = BANNERS[index % BANNERS.length];
+  return (
+    <div className="relative h-24 overflow-hidden" style={{ background: b.bg }}>
+      {/* decorative shapes */}
+      <span className="absolute -left-6 -top-8 h-24 w-24 rounded-full" style={{ background: b.deco }} />
+      <span className="absolute -bottom-10 right-8 h-28 w-28 rounded-full" style={{ background: b.deco }} />
+      <span className="absolute right-24 top-3 h-8 w-8 rotate-45 rounded-lg" style={{ background: b.deco }} />
+      <span className="absolute left-1/3 bottom-2 h-4 w-4 rounded-full" style={{ background: b.deco }} />
+      <div className="absolute inset-x-4 bottom-3 flex items-end justify-between gap-2">
+        <p className="line-clamp-1 font-display text-lg font-bold text-white drop-shadow-sm">{title}</p>
+        <span className="shrink-0 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-foreground shadow-sm">+{money(reward)}</span>
+      </div>
+    </div>
+  );
+}
 
 export function TaskList({ limit }: { limit?: number }) {
   const { data: tasks, isLoading } = useTasks();
   const { data: subs } = useMySubmissions();
   const [open, setOpen] = useState<Task | null>(null);
-  const byTask = new Map(subs?.map((s) => [s.task_id, s.status]));
+  const done = new Map(subs?.map((s) => [s.task_id, s.reward_amount ?? 0]));
   const list = limit ? tasks?.slice(0, limit) : tasks;
 
-  if (isLoading) return <div className="space-y-3">{[0, 1, 2].map((k) => <Skeleton key={k} className="h-20 rounded-2xl" />)}</div>;
+  if (isLoading) return <div className="space-y-3">{[0, 1, 2].map((k) => <Skeleton key={k} className="h-40 rounded-2xl" />)}</div>;
   if (!list?.length) return <Empty icon={<PlayCircle />} title="No tasks right now" text="Check back soon." />;
 
   return (
     <>
-      <div className="space-y-3">
-        {list.map((t) => {
-          const st = byTask.get(t.id);
+      <div className="space-y-4">
+        {list.map((t, i) => {
+          const earned = done.get(t.id);
+          const isDone = earned !== undefined;
           return (
-            <button key={t.id} disabled={!!st} onClick={() => setOpen(t)} className="flex w-full items-center gap-4 rounded-2xl border bg-card p-4 text-left shadow-card transition enabled:hover:-translate-y-0.5 disabled:opacity-80">
-              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary-soft text-primary">
-                {st ? <CheckCircle2 className="h-6 w-6" /> : <PlayCircle className="h-6 w-6" />}
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block truncate font-semibold">{t.title}</span>
-                <span className="flex items-center gap-1 text-xs text-muted-foreground"><Clock className="h-3 w-3" /> Watch ad · {AD_SECONDS}s</span>
-              </span>
-              <span className="text-right">
-                <span className="block font-display font-bold text-primary">+{money(t.reward_amount)}</span>
-                {st && <StatusBadge status={st} />}
-              </span>
-            </button>
+            <div key={t.id} className={cn("overflow-hidden rounded-2xl border bg-card shadow-card", isDone && "border-success/40")}>
+              <Banner index={i} title={t.title} reward={t.reward_amount} />
+              <div className="space-y-3 p-4">
+                <p className="line-clamp-2 text-sm text-muted-foreground">{t.description || "Watch the full ad to earn this reward."}</p>
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" /> {AD_SECONDS}s ad</span>
+                  <span className="flex items-center gap-1"><Eye className="h-3.5 w-3.5" /> Watch fully to earn</span>
+                </div>
+                {isDone ? (
+                  <div className="flex items-center gap-2 rounded-xl bg-success/10 px-3 py-2.5 text-sm font-semibold text-success">
+                    <BadgeCheck className="h-5 w-5" /> Completed · You earned {money(earned)}
+                  </div>
+                ) : (
+                  <Button variant="hero" className="w-full" onClick={() => setOpen(t)}>
+                    <PlayCircle /> Start Task · Earn {money(t.reward_amount)}
+                  </Button>
+                )}
+              </div>
+            </div>
           );
         })}
       </div>
@@ -60,10 +96,15 @@ function AdPlayer({ task, onClose }: { task: Task; onClose: () => void }) {
 
   async function claim() {
     setBusy(true);
-    const { error } = await supabase.rpc("submit_task", { _task_id: task.id, _evidence: `Ad watched fully (${AD_SECONDS}s) at ${new Date().toISOString()}` });
+    if (readDemoUser()) {
+      completeDemoTask(task.id, task.reward_amount);
+      toast.success(`${money(task.reward_amount)} earned! Task completed.`);
+    } else {
+      const { error } = await supabase.rpc("submit_task", { _task_id: task.id, _evidence: `Ad watched fully (${AD_SECONDS}s) at ${new Date().toISOString()}` });
+      if (error) { setBusy(false); toast.error(errMsg(error)); return; }
+      toast.success(`${money(task.reward_amount)} added to pending — credited after review`);
+    }
     setBusy(false);
-    if (error) { toast.error(errMsg(error)); return; }
-    toast.success(`${money(task.reward_amount)} added to pending — credited after review`);
     qc.invalidateQueries({ queryKey: ["my-subs"] });
     qc.invalidateQueries({ queryKey: ["balances"] });
     onClose();
