@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LangSelect, Logo } from "@/components/common";
+import { COUNTRIES, flagOf } from "@/lib/countries";
 
 export const Route = createFileRoute("/phone-signup")({
   head: () => ({
@@ -21,29 +22,10 @@ export const Route = createFileRoute("/phone-signup")({
   component: PhoneSignup,
 });
 
-type Country = { name: string; flag: string; dial: string; digits: number };
-export const COUNTRIES: Country[] = [
-  { name: "India", flag: "🇮🇳", dial: "+91", digits: 10 },
-  { name: "United States", flag: "🇺🇸", dial: "+1", digits: 10 },
-  { name: "United Kingdom", flag: "🇬🇧", dial: "+44", digits: 10 },
-  { name: "UAE", flag: "🇦🇪", dial: "+971", digits: 9 },
-  { name: "Saudi Arabia", flag: "🇸🇦", dial: "+966", digits: 9 },
-  { name: "Nepal", flag: "🇳🇵", dial: "+977", digits: 10 },
-  { name: "Bangladesh", flag: "🇧🇩", dial: "+880", digits: 10 },
-  { name: "Pakistan", flag: "🇵🇰", dial: "+92", digits: 10 },
-  { name: "Sri Lanka", flag: "🇱🇰", dial: "+94", digits: 9 },
-  { name: "Singapore", flag: "🇸🇬", dial: "+65", digits: 8 },
-  { name: "Australia", flag: "🇦🇺", dial: "+61", digits: 9 },
-  { name: "Canada", flag: "🇨🇦", dial: "+1", digits: 10 },
-  { name: "Germany", flag: "🇩🇪", dial: "+49", digits: 11 },
-  { name: "Indonesia", flag: "🇮🇩", dial: "+62", digits: 10 },
-  { name: "Philippines", flag: "🇵🇭", dial: "+63", digits: 10 },
-  { name: "Nigeria", flag: "🇳🇬", dial: "+234", digits: 10 },
-];
 
 function PhoneSignup() {
   const nav = useNavigate();
-  const [ci, setCi] = useState(0);
+  const [ci, setCi] = useState(() => Math.max(0, COUNTRIES.findIndex((x) => x.code === "IN")));
   const [phone, setPhone] = useState("");
   const [pickerOpen, setPickerOpen] = useState(false);
   const [step, setStep] = useState<"phone" | "otp">("phone");
