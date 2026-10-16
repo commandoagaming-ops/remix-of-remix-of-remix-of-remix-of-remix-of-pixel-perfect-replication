@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { LangSelect, Logo } from "@/components/common";
 import { COUNTRIES } from "@/lib/countries";
 import { Flag } from "@/components/flag";
+import { savePending } from "@/lib/pending-signup";
 
 export const Route = createFileRoute("/phone-signup")({
   head: () => ({
@@ -72,7 +73,8 @@ function PhoneSignup() {
       return;
     }
     toast.success("Mobile number verified");
-    nav({ to: "/auth", search: { mode: "signup" } });
+    savePending({ phone: `${c.dial} ${phone}` });
+    nav({ to: "/create-account" });
   }
 
   return (

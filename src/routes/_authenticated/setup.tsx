@@ -12,24 +12,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useProfile, errMsg } from "@/lib/data";
 import { LANGS, useT, type Lang } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { fileToAvatar } from "@/lib/avatar";
+import { clearPending, readPending } from "@/lib/pending-signup";
 
 export const Route = createFileRoute("/_authenticated/setup")({
   head: () => ({ meta: [{ title: "Complete your profile — Unto Together" }, { name: "description", content: "Set up your Unto Together profile." }, { property: "og:title", content: "Profile setup — Unto Together" }, { property: "og:description", content: "Set up your profile." }] }),
   component: Setup,
 });
-
-export async function fileToAvatar(file: File): Promise<string> {
-  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) throw new Error("Use a JPG, PNG or WEBP image");
-  if (file.size > 5 * 1024 * 1024) throw new Error("Image must be under 5 MB");
-  const img = await createImageBitmap(file);
-  const size = 256;
-  const c = document.createElement("canvas");
-  c.width = size; c.height = size;
-  const ctx = c.getContext("2d")!;
-  const s = Math.min(img.width, img.height);
-  ctx.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size);
-  return c.toDataURL("image/jpeg", 0.82);
-}
 
 function Setup() {
   const { t, setLang } = useT();
@@ -45,11 +34,13 @@ function Setup() {
 
   useEffect(() => {
     if (p) {
-      setF({ full_name: p.full_name ?? "", phone: p.phone ?? "", country: p.country ?? "India", preferred_language: p.preferred_language ?? "en", avatar_url: p.avatar_url });
+      const pend = readPending();
+      setF({ full_name: p.full_name || pend.full_name || "", phone: p.phone || pend.phone || "", country: p.country ?? "India", preferred_language: p.preferred_language ?? "en", avatar_url: p.avatar_url || pend.avatar_url || null });
       setEmail(p.email ?? "");
     }
   }, [p]);
 
+  const valid0 = !!f.avatar_url;
   const valid1 = f.full_name.trim().length >= 2 && /^\+?[0-9 ]{8,16}$/.test(f.phone.trim()) && f.country.trim();
 
   async function finish() {
@@ -57,6 +48,7 @@ function Setup() {
     const { error } = await supabase.from("profiles").update({ ...f, full_name: f.full_name.trim(), phone: f.phone.trim(), profile_completed: true }).eq("id", p!.id);
     setBusy(false);
     if (error) { toast.error(errMsg(error)); return; }
+    clearPending();
     setLang(f.preferred_language as Lang);
     await qc.invalidateQueries({ queryKey: ["profile"] });
     nav({ to: "/home" });
@@ -90,7 +82,7 @@ function Setup() {
                 <Button variant="soft" onClick={() => fileRef.current?.click()}><Camera /> {f.avatar_url ? "Change" : "Upload"}</Button>
                 {f.avatar_url && <Button variant="ghost" onClick={() => setF({ ...f, avatar_url: null })}><Trash2 /> Remove</Button>}
               </div>
-              <p className="text-xs text-muted-foreground">JPG, PNG or WEBP · up to 5 MB · optional</p>
+              <p className="text-xs text-muted-foreground">JPG, PNG or WEBP · up to 5 MB · required</p>
             </div>
           )}
           {step === 1 && (
@@ -120,9 +112,9 @@ function Setup() {
           <div className="mt-6 flex justify-between gap-2">
             <Button variant="ghost" disabled={step === 0} onClick={() => setStep(step - 1)}>{t("back")}</Button>
             {step < 2 ? (
-              <Button onClick={() => setStep(step + 1)} disabled={step === 1 && !valid1}>{t("next")}</Button>
+              <Button onClick={() => setStep(step + 1)} disabled={(step === 0 && !valid0) || (step === 1 && !valid1)}>{t("next")}</Button>
             ) : (
-              <Button variant="hero" disabled={!agree || busy} onClick={finish}><Check /> {t("toDashboard")}</Button>
+              <Button variant="hero" disabled={!agree || busy || !valid0 || !valid1} onClick={finish}><Check /> {t("toDashboard")}</Button>
             )}
           </div>
         </div>
