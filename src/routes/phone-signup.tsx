@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LangSelect, Logo } from "@/components/common";
-import { COUNTRIES, flagOf } from "@/lib/countries";
+import { COUNTRIES } from "@/lib/countries";
+import { Flag } from "@/components/flag";
 
 export const Route = createFileRoute("/phone-signup")({
   head: () => ({
