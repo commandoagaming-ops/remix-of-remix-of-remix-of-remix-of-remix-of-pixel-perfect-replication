@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as HelpRouteImport } from './routes/help'
+import { Route as PhoneSignupRouteImport } from './routes/phone-signup'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedAppRouteRouteImport } from './routes/_authenticated/_app/route'
@@ -43,6 +44,11 @@ const AuthRoute = AuthRouteImport.update({
 const HelpRoute = HelpRouteImport.update({
   id: '/help',
   path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PhoneSignupRoute = PhoneSignupRouteImport.update({
+  id: '/phone-signup',
+  path: '/phone-signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/help': typeof HelpRoute
+  '/phone-signup': typeof PhoneSignupRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/help': typeof HelpRoute
+  '/phone-signup': typeof PhoneSignupRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -146,6 +154,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/help': typeof HelpRoute
+  '/phone-signup': typeof PhoneSignupRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/_authenticated/_app': typeof AuthenticatedAppRouteRouteWithChildren
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/help'
+    | '/phone-signup'
     | '/privacy'
     | '/terms'
     | '/admin'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/help'
+    | '/phone-signup'
     | '/privacy'
     | '/terms'
     | '/admin'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/help'
+    | '/phone-signup'
     | '/privacy'
     | '/terms'
     | '/_authenticated/_app'
@@ -217,6 +229,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   HelpRoute: typeof HelpRoute
+  PhoneSignupRoute: typeof PhoneSignupRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
 }
@@ -249,6 +262,13 @@ declare module '@tanstack/react-router' {
       path: '/help'
       fullPath: '/help'
       preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/phone-signup': {
+      id: '/phone-signup'
+      path: '/phone-signup'
+      fullPath: '/phone-signup'
+      preLoaderRoute: typeof PhoneSignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -383,6 +403,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   HelpRoute: HelpRoute,
+  PhoneSignupRoute: PhoneSignupRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
 }

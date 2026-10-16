@@ -62,8 +62,8 @@ function Welcome() {
             <Button asChild variant="outline" size="lg">
               <Link to="/auth" search={{ mode: "signup" }}><Mail /> {t("signupEmail")}</Link>
             </Button>
-            <Button variant="ghost" size="lg" onClick={() => toast.info("Mobile OTP sign-up is coming soon.")}>
-              <Smartphone /> {t("signupMobile")}
+            <Button asChild variant="ghost" size="lg">
+              <Link to="/phone-signup"><Smartphone /> {t("signupMobile")}</Link>
             </Button>
             <p className="text-sm text-muted-foreground">
               {t("haveAccount")} <Link to="/auth" search={{ mode: "login" }} className="font-semibold text-primary">{t("login")}</Link>
