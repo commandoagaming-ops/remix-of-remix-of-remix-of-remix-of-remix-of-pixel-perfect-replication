@@ -102,24 +102,20 @@ function PhoneSignup() {
               <p className="mt-1 text-sm text-muted-foreground">We'll send a 4-digit OTP to your number.</p>
               <form onSubmit={(e) => { e.preventDefault(); sendOtp(); }} className="mt-5 space-y-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="country">Country</Label>
-                  <select
-                    id="country"
-                    value={ci}
-                    onChange={(e) => { setCi(Number(e.target.value)); setPhone(""); }}
-                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                  >
-                    {COUNTRIES.map((x, i) => <option key={x.name} value={i}>{x.flag} {x.name} ({x.dial})</option>)}
-                  </select>
-                </div>
-                <div className="space-y-1.5">
                   <Label htmlFor="phone">Mobile number</Label>
                   <div className="flex gap-2">
-                    <span className="flex h-10 items-center rounded-md border bg-muted px-3 text-sm font-medium">{c.dial}</span>
+                    <button
+                      type="button"
+                      onClick={() => setPickerOpen(true)}
+                      className="flex h-10 items-center gap-1 rounded-md border bg-muted px-3 text-sm font-medium"
+                    >
+                      {c.flag} {c.dial}
+                      <svg className="h-3.5 w-3.5 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
+                    </button>
                     <Input
                       id="phone"
                       inputMode="numeric"
-                      placeholder={"9".repeat(c.digits)}
+                      placeholder="Enter mobile number"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, c.digits))}
                     />
