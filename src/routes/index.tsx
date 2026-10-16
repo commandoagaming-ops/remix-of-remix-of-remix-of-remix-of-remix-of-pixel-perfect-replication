@@ -6,8 +6,8 @@ import hero from "@/assets/hero.jpg";
 import { Button } from "@/components/ui/button";
 import { LangSelect, Logo } from "@/components/common";
 import { useT } from "@/lib/i18n";
-import { GoogleIcon, googleSignIn } from "@/components/google";
-import { supabase } from "@/integrations/supabase/client";
+import { GoogleIcon } from "@/components/google";
+import { demoSignIn, isDemoSignedIn } from "@/lib/demo-auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,13 +26,14 @@ function Welcome() {
   const nav = useNavigate();
   const [signedIn, setSignedIn] = useState(false);
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
-    const { data } = supabase.auth.onAuthStateChange((_e, s) => {
-      setSignedIn(!!s);
-      if (s) nav({ to: "/home" });
-    });
-    return () => data.subscription.unsubscribe();
-  }, [nav]);
+    setSignedIn(isDemoSignedIn());
+  }, []);
+
+  // Demo mode: Google button goes straight to Home, no real sign-in.
+  function withGoogle() {
+    demoSignIn({});
+    nav({ to: "/home" });
+  }
 
   return (
     <div className="min-h-screen bg-soft">
@@ -56,7 +57,7 @@ function Welcome() {
           <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] md:text-6xl">{t("tagline")}</h1>
           <p className="mt-5 max-w-lg text-lg text-muted-foreground">{t("intro")}</p>
           <div className="mt-8 flex flex-col gap-3 sm:max-w-sm">
-            <Button variant="hero" size="lg" onClick={googleSignIn}>
+            <Button variant="hero" size="lg" onClick={withGoogle}>
               <GoogleIcon /> {t("signupGoogle")}
             </Button>
             <Button asChild variant="outline" size="lg">

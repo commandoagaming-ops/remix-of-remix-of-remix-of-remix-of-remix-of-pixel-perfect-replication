@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { BadgeCheck, Camera, MailCheck } from "lucide-react";
 import { toast } from "sonner";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LangSelect, Logo } from "@/components/common";
-import { GoogleIcon, googleSignIn } from "@/components/google";
+import { GoogleIcon } from "@/components/google";
 import { errMsg } from "@/lib/data";
 import { readPending, savePending } from "@/lib/pending-signup";
 import { demoSignIn } from "@/lib/demo-auth";
@@ -34,6 +34,7 @@ const schema = z.object({
 });
 
 function CreateAccount() {
+  const nav = useNavigate();
   const [phone, setPhone] = useState("");
   const [avatar, setAvatar] = useState("");
   const [f, setF] = useState({ full_name: "", email: "", password: "" });
