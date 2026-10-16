@@ -72,9 +72,7 @@ export function HeroSlider() {
           style={{ background: `linear-gradient(180deg, ${s.bg[0]}, ${s.bg[1]})` }}
         />
       ))}
-      <Doodles key={i} tint={active.doodle} />
-
-      <div className="relative px-3 pt-3 sm:px-4 sm:pt-4 pb-10">
+      <div className="relative px-3 pt-3 sm:px-4 sm:pt-4">
         {SLIDES.map((s, n) => (
           <div
             key={n}
@@ -93,8 +91,10 @@ export function HeroSlider() {
         ))}
       </div>
 
-      {/* Dots on the colored band below the image */}
-      <div className="relative flex justify-center gap-2 pb-4">
+      {/* Colored band below the image: doodles + dots, color changes with the slide */}
+      <div className="relative h-20">
+        <Doodles key={i} tint={active.doodle} />
+        <div className="absolute inset-x-0 bottom-3 flex justify-center gap-2">
         {SLIDES.map((s, n) => (
           <button
             key={n}
