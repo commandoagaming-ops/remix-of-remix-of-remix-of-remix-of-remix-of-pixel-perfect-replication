@@ -249,7 +249,7 @@ function AdPlayer({ task, onClose }: { task: Task; onClose: () => void }) {
     <div className="fixed inset-0 z-50 flex flex-col overflow-hidden" style={{ background: theme.bg, color: theme.fg }}>
       <Doodles color={theme.fg} />
       {celebrate && <Celebration />}
-      <div className="flex items-center justify-between gap-3 p-4">
+      <div className="flex items-center justify-between gap-3 p-4 relative">
         <div>
           <p className="text-xs opacity-70">You will earn</p>
           <p className="font-display text-2xl font-bold">{money(task.reward_amount)}</p>
@@ -258,7 +258,7 @@ function AdPlayer({ task, onClose }: { task: Task; onClose: () => void }) {
         <button onClick={onClose} aria-label="Close" className="grid h-10 w-10 place-items-center rounded-full bg-white/50"><X className="h-5 w-5" /></button>
       </div>
       <div className="h-1 bg-white/25"><div className="h-full transition-all duration-1000" style={{ width: `${pct}%`, background: theme.btn }} /></div>
-      <div className="grid flex-1 place-items-center p-6">
+      <div className="grid flex-1 place-items-center p-6 relative">
         {/* Simulated ad — replace with a real ad network later */}
         <div className="w-full max-w-md overflow-hidden rounded-3xl p-8 text-center text-white shadow-2xl" style={{ background: theme.card }}>
           <p className="text-xs uppercase tracking-widest opacity-70">Sponsored</p>
@@ -266,7 +266,7 @@ function AdPlayer({ task, onClose }: { task: Task; onClose: () => void }) {
           <p className="mt-2 text-sm opacity-90">{task.description || "Thanks for watching!"}</p>
         </div>
       </div>
-      <div className="p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+      <div className="relative p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
         <Button className="w-full border-0 text-white hover:opacity-90" style={{ background: theme.btn }} size="lg" disabled={left > 0 || busy} onClick={claim}>
           {left > 0 ? `Wait ${left}s to claim` : busy ? "Claiming…" : `Claim ${money(task.reward_amount)}`}
         </Button>
