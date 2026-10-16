@@ -67,6 +67,9 @@ function AuthPage() {
           ) : (
             <>
               <Button variant="outline" size="lg" className="mt-5 w-full" onClick={googleSignIn}><GoogleIcon /> Continue with Google</Button>
+              <Button variant="outline" size="lg" className="mt-3 w-full" onClick={() => nav({ to: "/phone-signup" })}>
+                <PhoneIcon /> {mode === "signup" ? "Continue with mobile number" : "Continue with number"}
+              </Button>
               <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground"><span className="h-px flex-1 bg-border" />or<span className="h-px flex-1 bg-border" /></div>
               <form onSubmit={submit} className="space-y-4">
                 <div className="space-y-1.5"><Label htmlFor="email">{t("email")}</Label><Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></div>
