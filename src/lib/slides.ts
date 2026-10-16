@@ -1,6 +1,40 @@
-// Home page slider. Put a video URL (mp4) in `video` for each slide; empty = animated title slide.
-export const SLIDES: { video: string; title: string; sub: string }[] = [
-  { video: "", title: "Unto Together", sub: "Watch, complete tasks, earn rewards" },
-  { video: "", title: "Earn every day", sub: "New tasks added daily" },
-  { video: "", title: "Withdraw easily", sub: "Track every rupee in your account" },
+// Home page slider. Each slide has an image and a matching background theme
+// (Flipkart-style: the colored band extends below the image and changes with it).
+import slide1 from "@/assets/slide-1.png.asset.json";
+import slide2 from "@/assets/slide-2.png.asset.json";
+import slide3 from "@/assets/slide-3.png.asset.json";
+
+export type Slide = {
+  image: string;
+  alt: string;
+  // Background band colors (gradient top -> bottom) matching the image.
+  bg: [string, string];
+  // Decorative doodle tint drawn on the band.
+  doodle: string;
+  // Dot/accent color for the active indicator.
+  accent: string;
+};
+
+export const SLIDES: Slide[] = [
+  {
+    image: slide1.url,
+    alt: "Earn to Each Other — watch ads, complete tasks, withdraw via UPI",
+    bg: ["#f7ead0", "#efdcae"],
+    doodle: "#c9a24b",
+    accent: "#b98a1e",
+  },
+  {
+    image: slide2.url,
+    alt: "Earn to Each Other — complete tasks, track rewards, grow together",
+    bg: ["#0f5132", "#0a3b24"],
+    doodle: "#3fae72",
+    accent: "#34d399",
+  },
+  {
+    image: slide3.url,
+    alt: "Earn to Each Other — grow your earnings",
+    bg: ["#bcd9f7", "#8fbef0"],
+    doodle: "#3b82c4",
+    accent: "#2563eb",
+  },
 ];
