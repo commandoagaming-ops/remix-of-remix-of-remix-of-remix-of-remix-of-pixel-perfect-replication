@@ -45,6 +45,7 @@ function PhoneSignup() {
   const nav = useNavigate();
   const [ci, setCi] = useState(0);
   const [phone, setPhone] = useState("");
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [code, setCode] = useState("");
   const [otp, setOtp] = useState(["", "", "", ""]);
