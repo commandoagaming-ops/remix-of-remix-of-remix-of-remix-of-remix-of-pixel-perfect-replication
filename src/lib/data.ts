@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { readDemoUser } from "@/lib/demo-auth";
+import { readDemoSubs } from "@/lib/demo-tasks";
 
 export function money(n: number | null | undefined, currency = "INR") {
   return new Intl.NumberFormat("en-IN", { style: "currency", currency, maximumFractionDigits: 2 }).format(Number(n ?? 0));
