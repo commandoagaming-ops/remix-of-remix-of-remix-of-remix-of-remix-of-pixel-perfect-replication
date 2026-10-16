@@ -92,7 +92,7 @@ function PhoneSignup() {
                       onClick={() => setPickerOpen(true)}
                       className="flex h-10 items-center gap-1 rounded-md border bg-muted px-3 text-sm font-medium"
                     >
-                      {c.flag} {c.dial}
+                      {flagOf(c.code)} {c.dial}
                       <svg className="h-3.5 w-3.5 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
                     </button>
                     <Input
@@ -151,23 +151,20 @@ function PhoneSignup() {
               <h2 className="text-lg font-bold">Select country</h2>
               <button type="button" onClick={() => setPickerOpen(false)} className="text-sm text-muted-foreground">Cancel</button>
             </div>
-            <ul className="divide-y">
+            <div className="grid grid-cols-5 gap-2">
               {COUNTRIES.map((x, i) => (
-                <li key={x.name}>
-                  <button
-                    type="button"
-                    onClick={() => { setCi(i); setPhone(""); setPickerOpen(false); }}
-                    className={`flex w-full items-center justify-between px-2 py-3 text-left text-sm ${i === ci ? "font-semibold text-primary" : ""}`}
-                  >
-                    <span className="flex items-center gap-3">
-                      <span className="text-xl">{x.flag}</span>
-                      {x.name}
-                    </span>
-                    <span className="text-muted-foreground">{x.dial}</span>
-                  </button>
-                </li>
+                <button
+                  key={x.code}
+                  type="button"
+                  title={x.name}
+                  aria-label={x.name}
+                  onClick={() => { setCi(i); setPhone(""); setPickerOpen(false); }}
+                  className={`flex h-14 items-center justify-center rounded-xl border text-3xl ${i === ci ? "border-primary bg-primary-soft" : "hover:bg-muted"}`}
+                >
+                  {flagOf(x.code)}
+                </button>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
       )}
