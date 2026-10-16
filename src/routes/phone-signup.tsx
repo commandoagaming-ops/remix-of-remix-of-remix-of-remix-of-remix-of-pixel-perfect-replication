@@ -50,7 +50,7 @@ function PhoneSignup() {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [timer, setTimer] = useState(0);
   const refs = useRef<(HTMLInputElement | null)[]>([]);
-  const c = COUNTRIES[ci];
+  const c = COUNTRIES[ci] ?? COUNTRIES[0]!;
 
   useEffect(() => {
     if (timer <= 0) return;
