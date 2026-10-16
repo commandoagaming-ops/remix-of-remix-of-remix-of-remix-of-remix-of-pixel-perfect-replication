@@ -62,7 +62,7 @@ function AdPlayer({ task, onClose }: { task: Task; onClose: () => void }) {
     setBusy(true);
     const { error } = await supabase.rpc("submit_task", { _task_id: task.id, _evidence: `Ad watched fully (${AD_SECONDS}s) at ${new Date().toISOString()}` });
     setBusy(false);
-    if (error) return toast.error(errMsg(error));
+    if (error) { toast.error(errMsg(error)); return; }
     toast.success(`${money(task.reward_amount)} added to pending — credited after review`);
     qc.invalidateQueries({ queryKey: ["my-subs"] });
     qc.invalidateQueries({ queryKey: ["balances"] });

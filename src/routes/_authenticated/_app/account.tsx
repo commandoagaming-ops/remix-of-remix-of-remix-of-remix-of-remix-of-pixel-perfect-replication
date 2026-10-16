@@ -70,7 +70,7 @@ function AccountPage() {
         </div>
       </Card>
 
-      <Button variant="outline" className="w-full" onClick={async () => { await supabase.auth.signOut(); nav({ to: "/auth" }); }}><LogOut /> Log out</Button>
+      <Button variant="outline" className="w-full" onClick={async () => { await supabase.auth.signOut(); nav({ to: "/auth", search: {} as never }); }}><LogOut /> Log out</Button>
     </div>
   );
 }
