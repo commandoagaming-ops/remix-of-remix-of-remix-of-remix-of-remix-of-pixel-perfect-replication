@@ -23,7 +23,7 @@ function AccountPage() {
   });
   const payoutStatus = methods?.[0]?.verification_status;
   const checks: [string, boolean, string?][] = [
-    ["Email verified", !!u?.email_confirmed_at],
+    ["Email verified", !!(u && ("email_confirmed_at" in u ? u.email_confirmed_at : u.email))],
     ["Profile completed", !!p?.profile_completed],
     ["Mobile number added", !!p?.phone],
     ["Payout account", payoutStatus === "verified", payoutStatus ?? "not added"],
