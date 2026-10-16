@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CreateAccountRouteImport } from './routes/create-account'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as PhoneSignupRouteImport } from './routes/phone-signup'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -40,6 +41,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateAccountRoute = CreateAccountRouteImport.update({
+  id: '/create-account',
+  path: '/create-account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HelpRoute = HelpRouteImport.update({
@@ -123,6 +129,7 @@ const AuthenticatedAppWithdrawRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/create-account': typeof CreateAccountRoute
   '/help': typeof HelpRoute
   '/phone-signup': typeof PhoneSignupRoute
   '/privacy': typeof PrivacyRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/create-account': typeof CreateAccountRoute
   '/help': typeof HelpRoute
   '/phone-signup': typeof PhoneSignupRoute
   '/privacy': typeof PrivacyRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/create-account': typeof CreateAccountRoute
   '/help': typeof HelpRoute
   '/phone-signup': typeof PhoneSignupRoute
   '/privacy': typeof PrivacyRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/create-account'
     | '/help'
     | '/phone-signup'
     | '/privacy'
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/create-account'
     | '/help'
     | '/phone-signup'
     | '/privacy'
@@ -219,6 +230,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/create-account'
     | '/help'
     | '/phone-signup'
     | '/privacy'
@@ -240,6 +252,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  CreateAccountRoute: typeof CreateAccountRoute
   HelpRoute: typeof HelpRoute
   PhoneSignupRoute: typeof PhoneSignupRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -267,6 +280,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create-account': {
+      id: '/create-account'
+      path: '/create-account'
+      fullPath: '/create-account'
+      preLoaderRoute: typeof CreateAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/help': {
@@ -423,6 +443,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  CreateAccountRoute: CreateAccountRoute,
   HelpRoute: HelpRoute,
   PhoneSignupRoute: PhoneSignupRoute,
   PrivacyRoute: PrivacyRoute,
