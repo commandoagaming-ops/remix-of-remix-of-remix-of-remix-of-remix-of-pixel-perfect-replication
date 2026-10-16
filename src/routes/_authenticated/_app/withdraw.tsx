@@ -29,11 +29,11 @@ function WithdrawPage() {
   const fee = s ? Math.round((amt * Number(s.fee_percent ?? 0) / 100 + Number(s.fee_flat ?? 0)) * 100) / 100 : 0;
 
   async function request() {
-    if (!methodId) return toast.error("Add a payout account first");
+    if (!methodId) { toast.error("Add a payout account first"); return; }
     setBusy(true);
     const { error } = await supabase.rpc("request_withdrawal", { _amount: amt, _payout_method_id: methodId });
     setBusy(false);
-    if (error) return toast.error(errMsg(error));
+    if (error) { toast.error(errMsg(error)); return; }
     toast.success("Withdrawal requested");
     setAmount("");
     ["balances", "withdrawals"].forEach((k) => qc.invalidateQueries({ queryKey: [k] }));
@@ -86,15 +86,15 @@ function AddMethod({ onDone }: { onDone: () => void }) {
   const [f, setF] = useState({ holder_name: "", upi_id: "", bank_name: "", account_number: "", ifsc: "" });
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.value });
   async function save() {
-    if (f.holder_name.trim().length < 2) return toast.error("Enter account holder name");
-    if (type === "upi" && !/^[\w.-]{2,}@[a-zA-Z]{2,}$/.test(f.upi_id)) return toast.error("Enter a valid UPI ID");
-    if (type === "bank" && (!/^\d{9,18}$/.test(f.account_number) || !/^[A-Z]{4}0[A-Z0-9]{6}$/.test(f.ifsc.toUpperCase()))) return toast.error("Check account number and IFSC");
+    if (f.holder_name.trim().length < 2) { toast.error("Enter account holder name"); return; }
+    if (type === "upi" && !/^[\w.-]{2,}@[a-zA-Z]{2,}$/.test(f.upi_id)) { toast.error("Enter a valid UPI ID"); return; }
+    if (type === "bank" && (!/^\d{9,18}$/.test(f.account_number) || !/^[A-Z]{4}0[A-Z0-9]{6}$/.test(f.ifsc.toUpperCase()))) { toast.error("Check account number and IFSC"); return; }
     const { data: u } = await supabase.auth.getUser();
     const { error } = await supabase.from("payout_methods").insert({
       user_id: u.user!.id, method_type: type, holder_name: f.holder_name.trim(),
       ...(type === "upi" ? { upi_id: f.upi_id } : { bank_name: f.bank_name, account_number: f.account_number, ifsc: f.ifsc.toUpperCase() }),
     });
-    if (error) return toast.error(errMsg(error));
+    if (error) { toast.error(errMsg(error)); return; }
     toast.success("Payout account added — pending verification");
     onDone();
   }

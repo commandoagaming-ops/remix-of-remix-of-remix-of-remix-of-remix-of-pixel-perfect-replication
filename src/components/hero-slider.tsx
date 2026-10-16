@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 export function HeroSlider() {
   const [i, setI] = useState(0);
   useEffect(() => {
-    const id = setTimeout(() => setI((x) => (x + 1) % SLIDES.length), SLIDES[i].video ? 9000 : 5000);
+    const id = setTimeout(() => setI((x) => (x + 1) % SLIDES.length), SLIDES[i]?.video ? 9000 : 5000);
     return () => clearTimeout(id);
   }, [i]);
 

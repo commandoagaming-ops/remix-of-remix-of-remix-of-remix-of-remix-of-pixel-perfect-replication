@@ -39,7 +39,7 @@ function AppShell() {
         <nav className="mt-8 flex flex-col gap-1">
           {NAV.map((n) => (
             <Link key={n.to} to={n.to} className={cn("flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent", path.startsWith(n.to) && "bg-sidebar-accent text-sidebar-accent-foreground")}>
-              <n.icon className="h-5 w-5" /> {t(n.k)}
+              <n.icon className="h-5 w-5" /> {n.label}
             </Link>
           ))}
           {isAdmin && (
@@ -73,7 +73,7 @@ function AppShell() {
           return (
             <Link key={n.to} to={n.to} className={cn("flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium", active ? "text-primary" : "text-muted-foreground")}>
               <span className={cn("grid h-8 w-12 place-items-center rounded-full", active && "bg-primary-soft")}><n.icon className="h-5 w-5" /></span>
-              <span className="max-w-full truncate px-1">{t(n.k)}</span>
+              <span className="max-w-full truncate px-1">{n.label}</span>
             </Link>
           );
         })}
