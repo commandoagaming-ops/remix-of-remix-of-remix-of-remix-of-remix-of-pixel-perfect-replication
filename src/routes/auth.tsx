@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { LangSelect, Logo } from "@/components/common";
 import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/lib/i18n";
-import { GoogleIcon, googleSignIn } from "./index";
+import { GoogleIcon, googleSignIn } from "@/components/google";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (s: Record<string, unknown>) => ({ mode: s.mode === "signup" ? ("signup" as const) : ("login" as const) }),
