@@ -100,10 +100,10 @@ function Welcome() {
         <div className="mx-auto max-w-6xl px-5">
           <h2 className="text-2xl font-bold">See how it works</h2>
           <p className="mt-1 text-sm text-muted-foreground">Watch real people earning with Earn to Each Other.</p>
-          <div className="mt-6 grid gap-5 md:grid-cols-2">
+          <div className="mx-auto mt-6 grid max-w-3xl gap-6 md:grid-cols-2">
             {[promo1, promo2].map((v, i) => (
               <div key={i} className="overflow-hidden rounded-3xl border-4 border-card bg-card shadow-elegant">
-                <video src={v.url} controls playsInline preload="metadata" className="aspect-video w-full bg-muted object-cover" />
+                <video src={v.url} controls playsInline preload="metadata" className="aspect-[9/16] w-full bg-muted object-cover" />
               </div>
             ))}
           </div>
