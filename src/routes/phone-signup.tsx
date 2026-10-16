@@ -92,7 +92,7 @@ function PhoneSignup() {
                       onClick={() => setPickerOpen(true)}
                       className="flex h-10 items-center gap-1 rounded-md border bg-muted px-3 text-sm font-medium"
                     >
-                      {flagOf(c.code)} {c.dial}
+                      <Flag code={c.code} className="text-lg" /> {c.dial}
                       <svg className="h-3.5 w-3.5 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
                     </button>
                     <Input
@@ -159,7 +159,7 @@ function PhoneSignup() {
                     onClick={() => { setCi(i); setPhone(""); setPickerOpen(false); }}
                     className={`flex w-full items-center gap-3 px-2 py-3 text-left rounded-xl ${i === ci ? "bg-primary-soft" : "hover:bg-muted"}`}
                   >
-                    <span className="text-2xl leading-none">{flagOf(x.code)}</span>
+                    <Flag code={x.code} className="text-2xl" />
                     <span className="min-w-0">
                       <span className="block truncate text-sm font-semibold">{x.name}</span>
                       <span className="block text-sm text-muted-foreground">{x.dial}</span>
