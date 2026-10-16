@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/_app")({
   beforeLoad: async ({ context }) => {
+    // Demo mode: skip the profile-completed check, the demo profile is always complete.
+    if (context.userId === "demo-user") return { accountStatus: "active" };
     const { data } = await supabase.from("profiles").select("profile_completed, account_status").eq("id", context.userId).maybeSingle();
     if (!data?.profile_completed) throw redirect({ to: "/setup" });
     return { accountStatus: data.account_status };
@@ -29,6 +31,7 @@ function AppShell() {
   const { data: isAdmin } = useIsAdmin();
 
   useEffect(() => {
+    if (userId === "demo-user") return;
     supabase.from("profiles").update({ last_seen_at: new Date().toISOString() }).eq("id", userId).then(() => {});
   }, [userId]);
 
