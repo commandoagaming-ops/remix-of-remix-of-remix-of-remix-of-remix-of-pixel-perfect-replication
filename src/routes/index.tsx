@@ -12,9 +12,9 @@ import { demoSignIn, isDemoSignedIn } from "@/lib/demo-auth";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Unto Together — Complete Tasks, Earn Rewards" },
-      { name: "description", content: "Join Unto Together, explore tasks, learn new skills and track your rewards from one simple dashboard." },
-      { property: "og:title", content: "Unto Together — Complete Tasks, Earn Rewards" },
+      { title: "Earn to Each Other — Complete Tasks, Earn Rewards" },
+      { name: "description", content: "Join Earn to Each Other, explore tasks, learn new skills and track your rewards from one simple dashboard." },
+      { property: "og:title", content: "Earn to Each Other — Complete Tasks, Earn Rewards" },
       { property: "og:description", content: "Explore tasks, learn new skills and track verified rewards." },
     ],
   }),
@@ -96,7 +96,7 @@ function Welcome() {
 
       <footer className="border-t">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-6 text-sm text-muted-foreground">
-          <span>© {new Date().getFullYear()} Unto Together</span>
+          <span>© {new Date().getFullYear()} Earn to Each Other</span>
           <div className="flex gap-4">
             <Link to="/terms">{t("terms")}</Link>
             <Link to="/privacy">{t("privacy")}</Link>

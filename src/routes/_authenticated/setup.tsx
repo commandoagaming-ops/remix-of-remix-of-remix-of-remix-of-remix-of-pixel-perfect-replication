@@ -19,7 +19,7 @@ import { COUNTRIES } from "@/lib/countries";
 import { Flag } from "@/components/flag";
 
 export const Route = createFileRoute("/_authenticated/setup")({
-  head: () => ({ meta: [{ title: "Complete your profile — Unto Together" }, { name: "description", content: "Set up your Unto Together profile." }, { property: "og:title", content: "Profile setup — Unto Together" }, { property: "og:description", content: "Set up your profile." }] }),
+  head: () => ({ meta: [{ title: "Complete your profile — Earn to Each Other" }, { name: "description", content: "Set up your Earn to Each Other profile." }, { property: "og:title", content: "Profile setup — Earn to Each Other" }, { property: "og:description", content: "Set up your profile." }] }),
   component: Setup,
 });
 

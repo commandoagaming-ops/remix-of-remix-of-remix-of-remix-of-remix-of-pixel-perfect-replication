@@ -9,7 +9,7 @@ import { demoSignOut, readDemoUser } from "@/lib/demo-auth";
 import { clearDemoSubs } from "@/lib/demo-tasks";
 
 export const Route = createFileRoute("/_authenticated/_app/account")({
-  head: () => ({ meta: [{ title: "Account — Unto Together" }, { name: "description", content: "Your account, withdrawals and verification." }, { property: "og:title", content: "Account — Unto Together" }, { property: "og:description", content: "Your account, withdrawals and verification." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
+  head: () => ({ meta: [{ title: "Account — Earn to Each Other" }, { name: "description", content: "Your account, withdrawals and verification." }, { property: "og:title", content: "Account — Earn to Each Other" }, { property: "og:description", content: "Your account, withdrawals and verification." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: AccountPage,
 });
 

@@ -1,3 +1,4 @@
+import appIcon from "@/assets/app-icon.png";
 import { Link } from "@tanstack/react-router";
 import { Leaf } from "lucide-react";
 import type { ReactNode } from "react";
@@ -8,10 +9,8 @@ import { cn } from "@/lib/utils";
 export function Logo({ light }: { light?: boolean }) {
   return (
     <Link to="/" className={cn("flex items-center gap-2 font-display font-bold text-lg", light ? "text-primary-foreground" : "text-foreground")}>
-      <span className={cn("grid h-9 w-9 place-items-center rounded-xl", light ? "bg-primary-foreground/20" : "bg-hero text-primary-foreground")}>
-        <Leaf className="h-5 w-5" />
-      </span>
-      Unto Together
+      <img src={appIcon} alt="" width={36} height={36} className="h-9 w-9 rounded-xl" />
+      Earn to Each Other
     </Link>
   );
 }

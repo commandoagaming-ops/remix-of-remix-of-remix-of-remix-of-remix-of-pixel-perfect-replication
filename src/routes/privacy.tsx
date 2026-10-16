@@ -3,10 +3,10 @@ import { LegalShell } from "@/components/common";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({ meta: [
-    { title: "Privacy Policy — Unto Together" },
-    { name: "description", content: "How Unto Together handles your data." },
-    { property: "og:title", content: "Privacy Policy — Unto Together" },
-    { property: "og:description", content: "How Unto Together handles your data." },
+    { title: "Privacy Policy — Earn to Each Other" },
+    { name: "description", content: "How Earn to Each Other handles your data." },
+    { property: "og:title", content: "Privacy Policy — Earn to Each Other" },
+    { property: "og:description", content: "How Earn to Each Other handles your data." },
   ] }),
   component: () => (
     <LegalShell title="Privacy Policy">
