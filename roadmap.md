@@ -1,4 +1,7 @@
 # Unto Together roadmap
+- [ ] Real Firebase Google/email accounts and persistent user details — pending secure Firebase server credentials and provider setup
+- [ ] ImgBB profile uploads — pending secure key storage
+- [ ] Persist and protect earnings/balances; admin visibility of name, phone and balances
 - [ ] Backend: profiles, roles, tasks, submissions, ledger, withdrawals, videos
 - [ ] Welcome + login (Google, email)
 - [ ] Profile setup
