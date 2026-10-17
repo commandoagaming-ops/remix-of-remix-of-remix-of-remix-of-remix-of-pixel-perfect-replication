@@ -74,6 +74,24 @@ export type Database = {
         }
         Relationships: []
       }
+      firebase_identity_links: {
+        Row: {
+          created_at: string
+          firebase_uid: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          firebase_uid: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          firebase_uid?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       payout_methods: {
         Row: {
           account_number: string | null
