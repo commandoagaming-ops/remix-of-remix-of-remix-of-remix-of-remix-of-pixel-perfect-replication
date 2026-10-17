@@ -11,7 +11,7 @@ export function firebaseAuth() {
   const app = getApps().find(a => a.name === "earning-auth") ?? initializeApp(firebaseConfig, "earning-auth");
   return getAuth(app);
 }
-export const attachFirebaseIdentity = createMiddleware().client(async ({ next }) => {
+export const attachFirebaseIdentity = createMiddleware({ type: "function" }).client(async ({ next }) => {
   const auth = firebaseAuth();
   await auth.authStateReady();
   const user = auth.currentUser;
