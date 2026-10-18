@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowRight, CheckCircle2, Mail, PlayCircle, ShieldCheck, Smartphone, Wallet } from "lucide-react";
+import { ArrowRight, CheckCircle2, PlayCircle, ShieldCheck, Smartphone, Wallet } from "lucide-react";
 import { toast } from "sonner";
 import hero from "@/assets/hero.jpg";
 import promo1 from "@/assets/promo-1.mp4.asset.json";
@@ -18,6 +18,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Join Earn to Each Other, explore tasks, learn new skills and track your rewards from one simple dashboard." },
       { property: "og:title", content: "Earn to Each Other — Complete Tasks, Earn Rewards" },
       { property: "og:description", content: "Explore tasks, learn new skills and track verified rewards." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Welcome,
@@ -63,10 +65,7 @@ function Welcome() {
               <GoogleIcon /> {t("signupGoogle")}
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link to="/auth" search={{ mode: "signup" }}><Mail /> {t("signupEmail")}</Link>
-            </Button>
-            <Button asChild variant="ghost" size="lg">
-              <Link to="/phone-signup"><Smartphone /> {t("signupMobile")}</Link>
+              <Link to="/phone-signup"><Smartphone /> Sign up with mobile number</Link>
             </Button>
             <p className="text-sm text-muted-foreground">
               {t("haveAccount")} <Link to="/auth" search={{ mode: "login" }} className="font-semibold text-primary">{t("login")}</Link>
