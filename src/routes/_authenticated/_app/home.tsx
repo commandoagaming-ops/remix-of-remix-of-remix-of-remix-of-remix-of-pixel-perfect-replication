@@ -14,9 +14,13 @@ export const Route = createFileRoute("/_authenticated/_app/home")({
 function HomePage() {
   const { data: p } = useProfile();
   const { data: b } = useBalances();
+  const [slide, setSlide] = useState(0);
   return (
-    <div className="space-y-6">
-      <HeroSlider />
+    <div
+      className="-m-4 min-h-full space-y-6 p-4 transition-colors duration-700"
+      style={{ backgroundColor: SLIDES[slide]?.pageBg }}
+    >
+      <HeroSlider onSlideChange={setSlide} />
       <Link to="/account" className="flex items-center justify-between rounded-2xl border bg-card p-4 shadow-card">
         <div>
           <p className="text-xs text-muted-foreground">Hi {p?.full_name?.split(" ")[0]} · Available balance</p>
