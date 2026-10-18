@@ -13,6 +13,8 @@ export type Slide = {
   doodle: string;
   // Dot/accent color for the active indicator.
   accent: string;
+  // Very light tint for the whole page background while this slide is active.
+  pageBg: string;
 };
 
 export const SLIDES: Slide[] = [
@@ -22,6 +24,7 @@ export const SLIDES: Slide[] = [
     bg: ["#f7ead0", "#efdcae"],
     doodle: "#a8791a",
     accent: "#b98a1e",
+    pageBg: "#fbf4e4",
   },
   {
     image: slide2.url,
@@ -29,6 +32,7 @@ export const SLIDES: Slide[] = [
     bg: ["#0f5132", "#0a3b24"],
     doodle: "#3fae72",
     accent: "#34d399",
+    pageBg: "#e4f3ea",
   },
   {
     image: slide3.url,
@@ -36,5 +40,6 @@ export const SLIDES: Slide[] = [
     bg: ["#bcd9f7", "#8fbef0"],
     doodle: "#1d4ed8",
     accent: "#2563eb",
+    pageBg: "#e7f1fd",
   },
 ];
