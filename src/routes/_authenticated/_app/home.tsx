@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Wallet } from "lucide-react";
+import { useState } from "react";
 import { HeroSlider } from "@/components/hero-slider";
 import { TaskList } from "@/components/task-list";
 import { money, useBalances, useProfile } from "@/lib/data";
+import { SLIDES } from "@/lib/slides";
 
 export const Route = createFileRoute("/_authenticated/_app/home")({
   head: () => ({ meta: [{ title: "Home — Earn to Each Other" }, { name: "description", content: "Watch, complete tasks and earn rewards." }, { property: "og:title", content: "Home — Earn to Each Other" }, { property: "og:description", content: "Watch, complete tasks and earn rewards." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
