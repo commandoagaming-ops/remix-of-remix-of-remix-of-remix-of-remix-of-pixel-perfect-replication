@@ -52,12 +52,15 @@ function Doodles({ tint }: { tint: string }) {
   );
 }
 
-export function HeroSlider() {
+export function HeroSlider({ onSlideChange }: { onSlideChange?: (index: number) => void }) {
   const [i, setI] = useState(0);
   useEffect(() => {
     const id = setTimeout(() => setI((x) => (x + 1) % SLIDES.length), 5000);
     return () => clearTimeout(id);
   }, [i]);
+  useEffect(() => {
+    onSlideChange?.(i);
+  }, [i, onSlideChange]);
 
   const active = SLIDES[i]!;
 
